@@ -19,6 +19,9 @@ svg{display:block}
 .brand{display:inline-flex;align-items:center;gap:8px;justify-self:start;font-size:27px;font-weight:900;letter-spacing:-.075em;line-height:1}
 .brand img{width:18px;height:31px;object-fit:contain}
 .brand span{color:var(--red);margin-left:-7px}
+.header .brand{font-size:clamp(30px,3.1vw,40px);gap:9px;white-space:nowrap}
+.header .brand img{width:25px;height:43px}
+@media(max-width:650px){.header .brand{gap:6px}.header .brand img{width:21px;height:36px}}
 nav,.tools{display:flex;align-items:center;gap:clamp(12px,3vw,44px)}
 nav a,.tools button{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
 nav a:hover,.tools button:hover,.under:hover{color:var(--red)}
