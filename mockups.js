@@ -13,11 +13,20 @@ const placement = {
   'market-tote': [50,55,53]
 };
 
+export function escapeHtml(value = '') {
+  return String(value).replace(/[&<>"']/g, character =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[character]);
+}
+
 export function mockup(product, alt) {
+  if (product.image || !Object.hasOwn(placement, product.id)) {
+    const image = product.image || 'assets/mark.webp';
+    return `<span class="garment studio"><img class="blank" src="${escapeHtml(image)}" alt="${escapeHtml(alt)}" loading="lazy"></span>`;
+  }
   const [x,y,width] = placement[product.id];
   const technique = product.technique==='embroidered' ? 'stitch' : 'ink';
   return `<span class="garment studio" style="--art-x:${x}%;--art-y:${y}%;--art-width:${width}%">
-    <img class="blank" src="assets/products/${product.id}.webp" alt="${alt}" width="349" height="437" loading="lazy">
+    <img class="blank" src="assets/products/${product.id}.webp" alt="${escapeHtml(alt)}" width="349" height="437" loading="lazy">
     <span class="artwork ${technique} ${product.mark}" aria-hidden="true">
       <img src="assets/${product.mark}.webp" alt="">
     </span>

@@ -6,7 +6,7 @@ A bilingual, dependency-free apparel storefront. Serve this directory as static 
 
 The ten pieces, mockups and USD prices are launch concepts in `catalog.js`. Confirm garments, artwork rights, sizing and pricing before opening orders. The red and script graphics were supplied as brand references and depict Guinea’s national branding. Verify commercial rights and any necessary permissions before production or public sale.
 
-The bag works locally. To open checkout, create the products and sizes in Shopify, publish them to the storefront sales channel, and fill in `shopify` in `commerce.js` with the shop’s myshopify.com hostname, a **public Storefront API token**, and variant GIDs keyed by the stable product IDs and sizes in `catalog.js`. Do not expose a private Storefront or Admin API token. Confirm currency, pricing, availability and both storefront languages against Shopify. The adapter creates a Shopify cart and hands buyers off to Shopify-hosted checkout. See [Shopify cartCreate](https://shopify.dev/docs/api/storefront/2026-10/mutations/cartCreate).
+The bag works locally. With a valid Headless configuration, the site reads Shopify products and variants and uses Shopify-hosted checkout. See the environment setup below.
 
 Once the production domain is set, add a canonical URL, absolute social image URL and sitemap for that domain.
 
@@ -45,3 +45,17 @@ Photos were resized and converted to WebP. Creator, source and license details a
 - [United Nations, Nimba](https://www.un.org/ungifts/nimba)
 - [Musée des Confluences, Nimba](https://portail.museedesconfluences.fr/notice122425417139416811?lang=fr)
 - [Africa Guinée, national branding coordination statement](https://www.africaguinee.com/coupe-dafrique-des-nations-2023-a-propos-de-la-caf-et-du-branding-guinee/)
+
+## Shopify storefront and staff admin
+
+Vercel builds the storefront and staff interface into `dist` and deploys the separate `api/` functions. Run `npm run build` to prepare static assets. An HTTP server serving only `dist` can display the editorial storefront. Use Vercel for the API routes.
+
+Set these variables in the Nimba Vercel project and redeploy:
+
+- `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_CLIENT_ID`, `SHOPIFY_CLIENT_SECRET`: Nimba Shopify Admin app credentials. Keep the secret sensitive and server-side.
+- `ADMIN_PASSWORD`: a unique random staff password, at least 20 characters. `ADMIN_SESSION_SECRET`: a separate random value at least 32 characters long. Mark both sensitive. `ADMIN_USERNAME` defaults to `nimba`.
+- `SHOPIFY_STOREFRONT_PUBLIC_TOKEN`: an optional override for the token marked **Public** in Shopify's Headless channel. The site already includes the Nimba public token for the configured Nimba store. This value is intentionally browser-accessible. Use `SHOPIFY_COLLECTION_HANDLE` if the collection handle differs from `nimba`. Publish the collection and each product to Headless. With an empty collection or without a working public connection the editorial catalog stays visible with checkout closed.
+- `SHOPIFY_HEADLESS_PUBLICATION_ID`: optional explicit Shopify Publication GID. Set it if more than one publication matches or Shopify labels Headless differently.
+- `MODELS_SCRIPT_URL`, `MODELS_API_SECRET`: optional credentials for a separate Nimba Models Apps Script deployment. The Models tab requires that service.
+
+Staff sign in at `/admin`. Each admin API request requires a signed staff session except login. Product publication targets Headless. The Shopify collection drives the live catalog, while the existing bilingual copy and mockups supply presentation details for matching handles. To enable featured ordering and color from Shop Editor in the storefront, grant the Headless storefront permission to read product tags.

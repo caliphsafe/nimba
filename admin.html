@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Nimba Admin</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css?v=1" />
+  <link rel="stylesheet" href="admin-mobile.css?v=1" />
+  <link rel="stylesheet" href="admin-bulk.css?v=1" />
+  <link rel="stylesheet" href="admin-bulk-edit.css?v=1" />
+  <link rel="stylesheet" href="admin-v2.css?v=1" />
+  <link rel="stylesheet" href="admin-sort.css?v=1" />
+</head>
+<body>
+  <div class="admin-login-screen" id="admin-login-screen">
+    <form class="admin-login-card" id="admin-login-form">
+      <div class="admin-mark">NIMBA</div><p>ADMIN ACCESS</p>
+      <label>Username<input id="login-username" type="text" autocomplete="username" required /></label>
+      <label>Password<input id="login-password" type="password" autocomplete="current-password" required /></label>
+      <button type="submit">ENTER</button><p class="admin-message" id="login-message"></p>
+    </form>
+  </div>
+
+  <div class="admin-app" id="admin-app" hidden>
+    <header class="admin-header">
+      <button class="admin-brand" id="admin-home-btn" type="button">NIMBA / ADMIN</button>
+      <div class="admin-header-meta"><span id="admin-user-label">STAFF</span><button id="admin-logout-btn" type="button">LOG OUT</button></div>
+    </header>
+
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <nav>
+          <button class="admin-nav-link is-active" data-view="dashboard" type="button">Dashboard</button>
+          <button class="admin-nav-link" data-view="orders" type="button">Orders</button>
+          <button class="admin-nav-link" data-view="customers" type="button">Customers</button>
+          <button class="admin-nav-link" data-view="models" type="button">Models</button>
+          <button class="admin-nav-link" data-view="products" type="button">Products</button>
+          <button class="admin-nav-link" data-view="editor" type="button">Add Product</button>
+          <button class="admin-nav-link" data-view="bulk" type="button">Bulk Upload</button>
+          <button class="admin-nav-link" data-view="inventory" type="button">Inventory</button>
+          <button class="admin-nav-link" data-view="discounts" type="button">Discounts</button>
+          <button class="admin-nav-link" data-view="draft-orders" type="button">Draft Orders</button>
+          <button class="admin-nav-link" data-view="abandoned" type="button">Abandoned</button>
+          <button class="admin-nav-link" data-view="archive" type="button">Archive</button>
+        </nav>
+        <p class="admin-sidebar-note">SHOPIFY IS THE SOURCE OF TRUTH.</p>
+      </aside>
+
+      <main class="admin-main">
+
+        <!-- ADMIN V2 DASHBOARD -->
+        <section class="admin-view is-active" id="view-dashboard" data-view-panel="dashboard">
+          <div class="admin-page-head">
+            <div><p class="admin-kicker">Store Overview</p><h1>Dashboard</h1></div>
+            <button class="admin-text-btn" id="dashboard-refresh-btn" type="button">Refresh</button>
+          </div>
+
+          <div class="v2-period-tabs" id="dashboard-period-tabs">
+            <button class="is-active" data-days="1" type="button">Today</button>
+            <button data-days="7" type="button">7 Days</button>
+            <button data-days="30" type="button">30 Days</button>
+          </div>
+
+          <div class="v2-metrics-grid" id="dashboard-metrics">
+            <article><span>Revenue</span><strong>—</strong></article>
+            <article><span>Orders</span><strong>—</strong></article>
+            <article><span>Average Order</span><strong>—</strong></article>
+            <article><span>Units Sold</span><strong>—</strong></article>
+            <article><span>Needs Shipping</span><strong>—</strong></article>
+            <article><span>Low Stock</span><strong>—</strong></article>
+            <article><span>Sold Out</span><strong>—</strong></article>
+            <article><span>Abandoned</span><strong>—</strong></article>
+          </div>
+
+          <div class="v2-dashboard-grid">
+            <section class="v2-panel">
+              <div class="v2-panel-head"><div><p class="admin-kicker">Priority</p><h2>Needs Shipping</h2></div><button type="button" data-go-view="orders">View Orders</button></div>
+              <div id="dashboard-shipping-list" class="v2-list"></div>
+            </section>
+
+            <section class="v2-panel">
+              <div class="v2-panel-head"><div><p class="admin-kicker">Inventory</p><h2>Low Stock</h2></div><button type="button" data-go-view="inventory">Inventory</button></div>
+              <div id="dashboard-stock-list" class="v2-list"></div>
+            </section>
+
+            <section class="v2-panel">
+              <div class="v2-panel-head"><div><p class="admin-kicker">Performance</p><h2>Top Products</h2></div></div>
+              <div id="dashboard-top-products" class="v2-list"></div>
+            </section>
+
+            <section class="v2-panel">
+              <div class="v2-panel-head"><div><p class="admin-kicker">Recovery</p><h2>Abandoned</h2></div><button type="button" data-go-view="abandoned">View All</button></div>
+              <div id="dashboard-abandoned-list" class="v2-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ORDERS -->
+        <section class="admin-view" id="view-orders" data-view-panel="orders">
+          <div class="admin-page-head">
+            <div><p class="admin-kicker">Commerce</p><h1>Orders</h1></div>
+            <button class="admin-text-btn" id="orders-refresh-btn" type="button">Refresh</button>
+          </div>
+          <div class="admin-toolbar v2-toolbar">
+            <input id="orders-search" type="search" placeholder="Search order, customer, email" />
+            <select id="orders-status-filter">
+              <option value="ALL">All fulfillment</option>
+              <option value="UNFULFILLED">Unfulfilled</option>
+              <option value="FULFILLED">Fulfilled</option>
+              <option value="PARTIALLY_FULFILLED">Partial</option>
+            </select>
+            <select class="admin-sort-select" data-sort-section="orders">
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="total-desc">Highest Total</option>
+              <option value="total-asc">Lowest Total</option>
+              <option value="items-desc">Most Items</option>
+              <option value="items-asc">Fewest Items</option>
+              <option value="customer-asc">Customer A–Z</option>
+              <option value="customer-desc">Customer Z–A</option>
+            </select>
+          </div>
+          <div id="orders-summary" class="v2-summary-strip"></div>
+          <div id="orders-list" class="v2-table-list"></div>
+          <div class="admin-empty" id="orders-empty" hidden>No orders found.</div>
+        </section>
+
+        <!-- CUSTOMERS -->
+        <section class="admin-view" id="view-customers" data-view-panel="customers">
+          <div class="admin-page-head">
+            <div><p class="admin-kicker">Audience</p><h1>Customers</h1></div>
+            <button class="admin-text-btn" id="customers-refresh-btn" type="button">Refresh</button>
+          </div>
+          <div class="admin-toolbar v2-toolbar">
+            <input id="customers-search" type="search" placeholder="Search customer, email, phone" />
+            <select id="customers-filter">
+              <option value="ALL">All customers</option>
+              <option value="REPEAT">Repeat customers</option>
+              <option value="VIP">Spent $500+</option>
+            </select>
+            <select class="admin-sort-select" data-sort-section="customers">
+              <option value="spend-desc">Highest Spend</option>
+              <option value="spend-asc">Lowest Spend</option>
+              <option value="orders-desc">Most Orders</option>
+              <option value="orders-asc">Fewest Orders</option>
+              <option value="date-desc">Newest Customer</option>
+              <option value="date-asc">Oldest Customer</option>
+              <option value="name-asc">Name A–Z</option>
+              <option value="name-desc">Name Z–A</option>
+            </select>
+          </div>
+          <div id="customers-list" class="v2-table-list"></div>
+          <div class="admin-empty" id="customers-empty" hidden>No customers found.</div>
+        </section>
+
+        <!-- DISCOUNTS -->
+        <section class="admin-view" id="view-discounts" data-view-panel="discounts">
+          <div class="admin-page-head">
+            <div><p class="admin-kicker">Promotions</p><h1>Discounts</h1></div>
+            <button class="admin-primary-link" id="new-discount-btn" type="button">+ Create Discount</button>
+          </div>
+          <div class="admin-toolbar v2-toolbar admin-sort-only">
+            <select class="admin-sort-select" data-sort-section="discounts">
+              <option value="start-desc">Newest First</option>
+              <option value="start-asc">Oldest First</option>
+              <option value="end-asc">Ending Soonest</option>
+              <option value="end-desc">Ending Latest</option>
+              <option value="status-asc">Status</option>
+              <option value="title-asc">Name A–Z</option>
+              <option value="title-desc">Name Z–A</option>
+            </select>
+          </div>
+          <div id="discount-create-panel" class="v2-create-panel" hidden>
+            <div class="v2-panel-head"><div><p class="admin-kicker">New Code</p><h2>Percentage Discount</h2></div><button class="admin-text-btn" id="cancel-discount-btn" type="button">Cancel</button></div>
+            <div class="admin-form-grid">
+              <label class="admin-field">Code<input id="discount-code" type="text" placeholder="NIMBA20" /></label>
+              <label class="admin-field">Percent Off<input id="discount-percent" type="number" min="1" max="100" step="1" placeholder="20" /></label>
+              <label class="admin-field">Usage Limit<input id="discount-limit" type="number" min="1" step="1" placeholder="Optional" /></label>
+              <label class="admin-field">Ends<input id="discount-end" type="datetime-local" /></label>
+              <label class="admin-field admin-field-full v2-checkbox-field"><input id="discount-once" type="checkbox" /> One use per customer</label>
+            </div>
+            <button class="admin-primary-btn" id="create-discount-btn" type="button">Create Discount</button>
+            <p class="admin-message" id="discount-message"></p>
+          </div>
+          <div id="discounts-list" class="v2-table-list"></div>
+          <div class="admin-empty" id="discounts-empty" hidden>No discounts found.</div>
+        </section>
+
+        <!-- DRAFT ORDERS -->
+        <section class="admin-view" id="view-draft-orders" data-view-panel="draft-orders">
+          <div class="admin-page-head">
+            <div><p class="admin-kicker">Manual Sales</p><h1>Draft Orders</h1></div>
+            <button class="admin-primary-link" id="new-draft-btn" type="button">+ New Draft Order</button>
+          </div>
+          <div class="admin-toolbar v2-toolbar admin-sort-only">
+            <select class="admin-sort-select" data-sort-section="drafts">
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="total-desc">Highest Total</option>
+              <option value="total-asc">Lowest Total</option>
+              <option value="items-desc">Most Items</option>
+              <option value="items-asc">Fewest Items</option>
+              <option value="status-asc">Status</option>
+            </select>
+          </div>
+          <div id="draft-create-panel" class="v2-create-panel" hidden>
+            <div class="v2-panel-head"><div><p class="admin-kicker">Create Order</p><h2>Customer + Items</h2></div><button class="admin-text-btn" id="cancel-draft-btn" type="button">Cancel</button></div>
+            <div class="admin-form-grid">
+              <label class="admin-field">Customer Email<input id="draft-email" type="email" placeholder="customer@email.com" /></label>
+              <label class="admin-field">Note<input id="draft-note" type="text" placeholder="VIP order / preorder / phone order" /></label>
+            </div>
+            <div class="v2-draft-items">
+              <div class="v2-panel-head"><h3>Items</h3><button class="admin-text-btn" id="add-draft-item-btn" type="button">+ Add Item</button></div>
+              <div id="draft-item-rows"></div>
+            </div>
+            <button class="admin-primary-btn" id="create-draft-btn" type="button">Create Draft Order</button>
+            <p class="admin-message" id="draft-message"></p>
+          </div>
+          <div id="draft-orders-list" class="v2-table-list"></div>
+          <div class="admin-empty" id="draft-orders-empty" hidden>No draft orders found.</div>
+        </section>
+
+        <!-- ABANDONED -->
+        <section class="admin-view" id="view-abandoned" data-view-panel="abandoned">
+          <div class="admin-page-head">
+            <div><p class="admin-kicker">Recovery</p><h1>Abandoned Checkouts</h1></div>
+            <button class="admin-text-btn" id="abandoned-refresh-btn" type="button">Refresh</button>
+          </div>
+          <div class="admin-toolbar v2-toolbar admin-sort-only">
+            <select class="admin-sort-select" data-sort-section="abandoned">
+              <option value="date-desc">Newest First</option>
+              <option value="date-asc">Oldest First</option>
+              <option value="total-desc">Highest Cart Value</option>
+              <option value="total-asc">Lowest Cart Value</option>
+              <option value="items-desc">Most Items</option>
+              <option value="items-asc">Fewest Items</option>
+              <option value="customer-asc">Customer A–Z</option>
+              <option value="status-asc">Recovery Status</option>
+            </select>
+          </div>
+          <div id="abandoned-list" class="v2-table-list"></div>
+          <div class="admin-empty" id="abandoned-empty" hidden>No abandoned checkouts found.</div>
+        </section>
+        <section class="admin-view" id="view-products" data-view-panel="products">
+          <div class="admin-page-head">
+            <div><p class="admin-kicker">Catalog</p><h1>Products</h1></div>
+            <button class="admin-primary-link" id="add-product-btn" type="button">+ Add Product</button>
+          </div>
+          <div class="admin-toolbar">
+            <input id="product-search" type="search" placeholder="Search products" />
+            <select id="product-status-filter">
+              <option value="ALL">All status</option>
+              <option value="ACTIVE">Live</option>
+              <option value="DRAFT">Draft</option>
+              <option value="ARCHIVED">Archived</option>
+            </select>
+            <select class="admin-sort-select" data-sort-section="products">
+              <option value="title-asc">Product A–Z</option>
+              <option value="title-desc">Product Z–A</option>
+              <option value="price-desc">Highest Price</option>
+              <option value="price-asc">Lowest Price</option>
+              <option value="stock-desc">Most Stock</option>
+              <option value="stock-asc">Lowest Stock</option>
+              <option value="status-asc">Status</option>
+            </select>
+          </div>
+          <div class="admin-product-list" id="admin-product-list"></div>
+          <div class="admin-empty" id="products-empty" hidden>No products found.</div>
+        </section>
+
+        <section class="admin-view" id="view-editor" data-view-panel="editor">
+          <div class="admin-page-head">
+            <div><p class="admin-kicker" id="editor-kicker">New Product</p><h1 id="editor-title">Add Product</h1></div>
+            <button class="admin-text-btn" id="cancel-editor-btn" type="button">Cancel</button>
+          </div>
+
+          <form id="product-editor-form">
+            <input type="hidden" id="editor-product-id" />
+
+            <section class="admin-step">
+              <div class="admin-step-number">01</div>
+              <div class="admin-step-content">
+                <div class="admin-step-head"><div><h2>Product</h2><p>Only the essentials the customer needs.</p></div></div>
+                <div class="admin-form-grid">
+                  <label class="admin-field admin-field-full">Product name<input id="product-title" type="text" required placeholder="Heavyweight Logo Hoodie" /></label>
+                  <label class="admin-field">Price<input id="product-price" type="number" min="0" step="0.01" required placeholder="92.00" /></label>
+                  <label class="admin-field">Type<select id="product-type"><option value="Tops">Tops</option><option value="Bottoms">Bottoms</option><option value="Outerwear">Outerwear</option><option value="Accessories">Accessories</option><option value="Product">Product</option></select></label>
+                  <label class="admin-field">Status<select id="product-status"><option value="DRAFT">Draft</option><option value="ACTIVE">Live</option></select></label>
+                  <label class="admin-field">Vendor<input id="product-vendor" type="text" value="Nimba" /></label>
+                  <label class="admin-field admin-field-full">Description<textarea id="product-description" rows="6" placeholder="Product description"></textarea></label>
+                </div>
+              </div>
+            </section>
+
+            <section class="admin-step">
+              <div class="admin-step-number">02</div>
+              <div class="admin-step-content">
+                <div class="admin-step-head"><div><h2>Photos</h2><p>1 = cover, 2 = shop hover, 3+ = gallery.</p></div></div>
+                <label class="admin-upload-zone" id="admin-upload-zone">
+                  <input id="product-images" type="file" accept="image/*" multiple />
+                  <span>DROP PRODUCT PHOTOS HERE</span><small>OR CLICK TO UPLOAD</small>
+                </label>
+                <div class="admin-image-preview-grid" id="image-preview-grid"></div>
+                <p class="admin-help">Images are uploaded to Shopify when the product is saved. Drag previews to reorder.</p>
+              </div>
+            </section>
+
+            <section class="admin-step">
+              <div class="admin-step-number">03</div>
+              <div class="admin-step-content">
+                <div class="admin-step-head"><div><h2>Sizes + Inventory</h2><p>Set the size and quantity. Zero automatically becomes sold out on the storefront.</p></div></div>
+                <div class="admin-size-presets">
+                  <button type="button" data-size-preset="S,M,L,XL">S–XL</button>
+                  <button type="button" data-size-preset="S,M,L,XL,XXL">S–XXL</button>
+                  <button type="button" data-size-preset="XS,S,M,L,XL,XXL">XS–XXL</button>
+                  <button type="button" id="add-custom-size-btn">+ Custom Size</button>
+                </div>
+                <div class="admin-set-all">
+                  <label>Set all stock<input id="set-all-inventory" type="number" min="0" step="1" value="0" /></label>
+                  <button id="apply-all-inventory" type="button">Apply to all</button>
+                </div>
+                <div class="admin-variant-table"><div class="admin-variant-head"><span>Size</span><span>Stock</span><span></span></div><div id="variant-rows"></div></div>
+              </div>
+            </section>
+
+            <section class="admin-step">
+              <div class="admin-step-number">04</div>
+              <div class="admin-step-content">
+                <div class="admin-step-head"><div><h2>Collections</h2><p>Select everywhere this product belongs. ALL ITEMS is selected by default when available.</p></div></div>
+                <div class="admin-collection-grid" id="collection-grid"></div>
+              </div>
+            </section>
+
+            <section class="admin-step">
+              <div class="admin-step-number">05</div>
+              <div class="admin-step-content">
+                <div class="admin-step-head"><div><h2>Review</h2><p>Save the product to Shopify.</p></div></div>
+                <div class="admin-review-card" id="admin-review-card"></div>
+                <div class="admin-save-row"><button class="admin-secondary-btn" id="save-draft-btn" type="button">Save as Draft</button><button class="admin-primary-btn" id="save-product-btn" type="submit">Publish / Save</button></div>
+                <p class="admin-message" id="editor-message"></p>
+              </div>
+            </section>
+          </form>
+        </section>
+
+        <!-- BULK UPLOAD -->
+        <section class="admin-view" id="view-bulk" data-view-panel="bulk">
+          <div class="admin-page-head bulk-page-head">
+            <div>
+              <p class="admin-kicker">Bulk Intake</p>
+              <h1>Bulk Upload</h1>
+            </div>
+            <button class="admin-text-btn" id="bulk-reset-btn" type="button">Reset</button>
+          </div>
+
+          <div class="bulk-intro">
+            <p>Drop all product images at once. Matching filenames become one product automatically.</p>
+            <code>Logo Hoodie 1.png → cover &nbsp; / &nbsp; Logo Hoodie 2.png → hover &nbsp; / &nbsp; Logo Hoodie 3.png → gallery</code>
+          </div>
+
+          <label class="bulk-upload-zone" id="bulk-upload-zone">
+            <input id="bulk-product-images" type="file" accept="image/*" multiple />
+            <span>DROP ALL PRODUCT PHOTOS HERE</span>
+            <small>OR TAP TO CHOOSE IMAGES</small>
+          </label>
+
+          <div class="bulk-summary" id="bulk-summary" hidden>
+            <div><strong id="bulk-product-count">0</strong><span>Products</span></div>
+            <div><strong id="bulk-image-count">0</strong><span>Images</span></div>
+            <div><strong id="bulk-ready-count">0</strong><span>Ready</span></div>
+            <div><strong id="bulk-attention-count">0</strong><span>Need attention</span></div>
+          </div>
+
+          <section class="bulk-apply-panel" id="bulk-apply-panel" hidden>
+            <div class="bulk-section-head">
+              <div><p class="admin-kicker">Apply to all</p><h2>Set shared product details</h2></div>
+            </div>
+            <div class="bulk-apply-grid">
+              <label>Price<input id="bulk-all-price" type="number" min="0" step="0.01" placeholder="Optional" /></label>
+              <label>Type<select id="bulk-all-type"><option value="">Keep individual</option><option value="Tops">Tops</option><option value="Bottoms">Bottoms</option><option value="Outerwear">Outerwear</option><option value="Accessories">Accessories</option><option value="Product">Product</option></select></label>
+              <label>Status<select id="bulk-all-status"><option value="">Keep individual</option><option value="DRAFT">Draft</option><option value="ACTIVE">Live</option></select></label>
+              <label>Vendor<input id="bulk-all-vendor" type="text" placeholder="Nimba" /></label>
+              <label>Stock each<input id="bulk-all-stock" type="number" min="0" step="1" placeholder="Optional" /></label>
+              <label>Size preset<select id="bulk-all-sizes"><option value="">Keep individual</option><option value="S,M,L,XL">S–XL</option><option value="S,M,L,XL,XXL">S–XXL</option><option value="XS,S,M,L,XL,XXL">XS–XXL</option><option value="ONE SIZE">One Size</option></select></label>
+            </div>
+            <div class="bulk-global-collections">
+              <p>Collections</p>
+              <div id="bulk-global-collection-grid" class="bulk-collection-grid"></div>
+            </div>
+            <button class="admin-secondary-btn bulk-apply-btn" id="bulk-apply-all-btn" type="button">Apply To All Products</button>
+          </section>
+
+          <div class="bulk-products-wrap" id="bulk-products-wrap"></div>
+
+          <div class="bulk-publish-bar" id="bulk-publish-bar" hidden>
+            <div>
+              <strong id="bulk-publish-label">Review products before publishing</strong>
+              <span id="bulk-publish-detail"></span>
+            </div>
+            <button class="admin-primary-btn" id="bulk-publish-btn" type="button">Upload Ready Products</button>
+          </div>
+
+          <div class="bulk-progress" id="bulk-progress" hidden>
+            <div class="bulk-progress-top"><span id="bulk-progress-label">Uploading...</span><span id="bulk-progress-count"></span></div>
+            <div class="bulk-progress-track"><span id="bulk-progress-fill"></span></div>
+            <div class="bulk-progress-list" id="bulk-progress-list"></div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="view-inventory" data-view-panel="inventory">
+          <div class="admin-page-head"><div><p class="admin-kicker">Fast Edit</p><h1>Inventory</h1></div><button class="admin-text-btn" id="refresh-inventory-btn" type="button">Refresh</button></div>
+          <div class="admin-inventory-list" id="admin-inventory-list"></div>
+        </section>
+
+        <section class="admin-view" id="view-archive" data-view-panel="archive">
+          <div class="admin-page-head"><div><p class="admin-kicker">Retired</p><h1>Archive</h1></div></div>
+          <div class="admin-toolbar v2-toolbar admin-sort-only">
+            <select class="admin-sort-select" data-sort-section="archive">
+              <option value="title-asc">Product A–Z</option>
+              <option value="title-desc">Product Z–A</option>
+              <option value="price-desc">Highest Price</option>
+              <option value="price-asc">Lowest Price</option>
+              <option value="stock-desc">Most Stock</option>
+              <option value="stock-asc">Lowest Stock</option>
+            </select>
+          </div>
+          <div class="admin-product-list" id="admin-archive-list"></div>
+          <div class="admin-empty" id="archive-empty" hidden>No archived products.</div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+
+    <div class="v2-drawer-backdrop" id="v2-drawer-backdrop" hidden></div>
+    <aside class="v2-drawer" id="v2-drawer" aria-hidden="true">
+      <div class="v2-drawer-head">
+        <div><p class="admin-kicker" id="v2-drawer-kicker">Details</p><h2 id="v2-drawer-title">Details</h2></div>
+        <button class="admin-text-btn" id="v2-drawer-close" type="button">Close</button>
+      </div>
+      <div id="v2-drawer-body" class="v2-drawer-body"></div>
+    </aside>
+
+  <script src="admin.js?v=5"></script>
+  <script src="admin-bulk.js?v=2"></script>
+  <script src="admin-image-optimizer.js?v=1"></script>
+  <script src="admin-bulk-edit.js?v=2"></script>
+  <script src="admin-v2.js?v=1"></script>
+  <script src="admin-sort.js?v=8"></script>
+</body>
+</html>

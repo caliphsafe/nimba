@@ -17,3 +17,42 @@ export const products = items.map(([id, shape, en, fr, colorEN, colorFR, fabric,
   category: ({tee:'tees',hoodie:'layers',crew:'layers',polo:'polos',cap:'accessories',tote:'accessories'})[shape],
   sizes: ['cap','tote'].includes(shape) ? ['OS'] : ['S','M','L','XL','XXL']
 }));
+
+const categories = [
+  ['polos', /polo/],
+  ['layers', /hoodie|hooded|crewneck|sweatshirt|pullover/],
+  ['tees', /t[ -]?shirt|\btee\b/],
+  ['accessories', /cap|hat|tote|accessor/]
+];
+const localCatalog = new Map(products.map(product => [product.id, product]));
+
+export function liveProduct(product) {
+  const local = localCatalog.get(product.handle);
+  const featuredSlot = Number(product.tags?.find(tag => /^NIMBA_FEATURED:[1-4]$/i.test(tag))?.slice(-1) || 0);
+  const color = product.tags?.find(tag => /^NIMBA_COLOR:/i.test(tag))?.slice('NIMBA_COLOR:'.length);
+  const type = product.productType || product.title;
+  const variants = Object.fromEntries(product.variants.nodes.map(variant => {
+    const sizeOption = variant.selectedOptions.find(option => /^(size|taille)$/i.test(option.name));
+    const simpleSize = variant.selectedOptions.length === 1 && sizeOption;
+    const size = simpleSize ? sizeOption.value : variant.title === 'Default Title' ? 'OS' : variant.title;
+    return [size, {...variant, amount: Number(variant.price.amount), currency: variant.price.currencyCode}];
+  }));
+  const sizes = Object.keys(variants);
+  const displayed = Object.values(variants).filter(variant => variant.availableForSale);
+  const price = (displayed.length ? displayed : Object.values(variants)).reduce((lowest, variant) =>
+    !lowest || variant.amount < lowest.amount ? variant : lowest, null);
+  const image = product.featuredImage?.url;
+  return {
+    ...local,
+    id:product.handle,
+    name:{en:product.title, fr:local?.name.fr ?? product.title},
+    color:color ? {en:color,fr:color} : local?.color,
+    category:categories.find(([,pattern]) => pattern.test(type.toLowerCase()))?.[0] ?? local?.category ?? 'accessories',
+    image:typeof image === 'string' && /^https:\/\/(?:cdn\.shopify\.com|[a-z\d-]+\.myshopify\.com)\//i.test(image) ? image : null,
+    featuredSlot,
+    price:price?.amount ?? null,
+    currency:price?.currency,
+    sizes,
+    variants
+  };
+}

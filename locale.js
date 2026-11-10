@@ -3,7 +3,7 @@ export const fr = {
 skip:'Aller au contenu',nav:'Menu principal',filter:'Filtrer la collection',shop:'Boutique',story:'Notre histoire',bag:'Panier',
 edition:'Collection 01 / Guinée',hero1:'Portez',hero2:'l’histoire.',intro:'Des communautés baga du littoral guinéen nous vient une figure de force et d’abondance. Une histoire que nous portons avec nous.',
 explore:'Découvrir la collection',meet:'Rencontrer D’mba',fig:'FIG. 01 / D’MBA',archive:'Des archives',coast:'Littoral guinéen',mask:'Masque d’épaule D’mba sculpté par un artiste baga de Guinée',
-belt1:'LA GRANDE MÈRE',belt2:'HÉRITAGE BAGA',belt3:'RÉPUBLIQUE DE GUINÉE',debut:'01 / La première collection',collection:'La collection Nimba',collectionCopy:'Le profil de D’mba, en encre et en fil. Dix pièces pour emporter un peu de chez soi.',
+belt1:'LA GRANDE MÈRE',belt2:'HÉRITAGE BAGA',belt3:'RÉPUBLIQUE DE GUINÉE',debut:'01 / La première collection',collection:'La collection Nimba',collectionCopy:'Le profil de D’mba, en encre et en fil. Emportez un peu de chez vous.',
 west:'GUINÉE / AFRIQUE DE L’OUEST',origin:'02 / Les origines',storyTitle:'La Grande Mère',
 storyA:'Avant de devenir une image familière en Guinée, D’mba était sculptée dans le bois par les artistes baga pour être portée sur les épaules d’un danseur. Une jupe de raphia dissimulait le danseur. La figure prenait vie lors des mariages, des récoltes et des cérémonies où l’on honorait les ancêtres et accueillait les invités.',
 storyB:'Son profil raconte une histoire de famille. Sa poitrine allongée rend hommage à la femme qui a allaité et élevé de nombreux enfants. Sa crête tressée évoque les coiffures peules et les liens ancestraux des Baga avec le Fouta-Djalon. En 1985, la Guinée a offert une sculpture de Nimba aux Nations Unies. En 2023, le pays a choisi son image pour sa marque-pays.',
@@ -17,8 +17,8 @@ all:'All pieces',tees:'Tees',layers:'Sweats',polos:'Polos',accessories:'Accessor
 };
 
 Object.assign(en, {
-  home:'Home',about:'About',contact:'Contact',viewAll:'Shop all ten pieces',
-  featuredCopy:'The D’mba profile in ink and thread. Discover four pieces from the debut collection.',
+  home:'Home',about:'About',contact:'Contact',viewAll:'Shop the collection',
+  featuredCopy:'The D’mba profile in ink and thread. Explore featured pieces from the debut collection.',
   detailMask:'Detail of a carved Baga Nimba mask', translated:'',
   quoteHome:'“the joy of living and the promise of an abundant harvest”',
   quoteShop:'“the careful detailing of the hairstyle”',
@@ -35,7 +35,7 @@ Object.assign(en, {
 });
 
 Object.assign(fr, {
-  home:'Accueil',about:'À propos',contact:'Contact',viewAll:'Voir les dix pièces',
+  home:'Accueil',about:'À propos',contact:'Contact',viewAll:'Voir la collection',
   featuredCopy:'Le profil de D’mba, en encre et en fil. Découvrez quatre pièces de la première collection.',
   detailMask:'Détail d’un masque Nimba sculpté par un artiste baga',translated:'Traduit de l’anglais',
   quoteHome:'« la joie de vivre et la promesse d’une récolte abondante »',
@@ -54,3 +54,12 @@ Object.assign(fr, {
 
 en.storyTitle = 'The Story of D’mba — Nimba';
 Object.assign(fr, storyFrench, {storyTitle:'L’histoire de D’mba — Nimba'});
+
+Object.assign(en, {
+  noProducts:'No pieces available here yet.', soldOut:'Unavailable',
+  bagUnavailable:'Remove unavailable items to continue to checkout.'
+});
+Object.assign(fr, {
+  noProducts:'Aucune pièce disponible pour le moment.', soldOut:'Indisponible',
+  bagUnavailable:'Retirez les articles indisponibles pour poursuivre la commande.'
+});

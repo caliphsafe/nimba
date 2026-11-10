@@ -209,3 +209,4 @@ h2{font-size:clamp(37px,5.25vw,81px)}
 .secondary-archive>div:last-child{grid-column:1;grid-row:1}
 .secondary-archive .archive-diptych figure{order:0;min-height:420px}
 @media(max-width:650px){.secondary-archive .archive-diptych,.secondary-archive>div:last-child{grid-column:1;grid-row:auto}.secondary-archive .archive-diptych figure{min-height:255px}}
+.size-options input:disabled+span{opacity:.45;cursor:not-allowed;text-decoration:line-through}
