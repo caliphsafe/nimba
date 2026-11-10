@@ -1,3 +1,4 @@
+import {storyFrench} from './story-locale.js';
 export const fr = {
 skip:'Aller au contenu',nav:'Menu principal',filter:'Filtrer la collection',shop:'Boutique',story:'Notre histoire',bag:'Panier',
 edition:'Collection 01 / Guinée',hero1:'Portez',hero2:'l’histoire.',intro:'Des communautés baga du littoral guinéen nous vient une figure de force et d’abondance. Une histoire que nous portons avec nous.',
@@ -50,3 +51,6 @@ Object.assign(fr, {
   contactName:'Nom',contactEmail:'E-mail',contactMessage:'Message',contactSubmit:'Ouvrir le brouillon',
   shopTitle:'La collection — Nimba',aboutTitle:'L’histoire de D’mba — Nimba',contactTitle:'Contact — Nimba'
 });
+
+en.storyTitle = 'The Story of D’mba — Nimba';
+Object.assign(fr, storyFrench, {storyTitle:'L’histoire de D’mba — Nimba'});

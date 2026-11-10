@@ -6,6 +6,7 @@ import {checkout,checkoutAvailable} from './commerce.js';
 
 const one = selector => document.querySelector(selector);
 const cards = one('#products');
+const campaign = document.body.dataset.page === 'home';
 const filters = one('#filters');
 const productDialog = one('#product-dialog');
 const bagDialog = one('#bag-dialog');
@@ -48,7 +49,7 @@ function renderProducts() {
     if (category !== 'all' && category !== product.category) return '';
     return `<article class="product-card"><button class="product-link" data-product="${product.id}" aria-label="${t('detail')} ${localized(product.name)}">
       <span class="product-art"><span class="item-number">${String(index+1).padStart(2,'0')} / 10</span>
-      ${mockup(product,localized(product.name))}
+      ${mockup(product,localized(product.name),campaign)}
       <span class="product-open" aria-hidden="true">↗</span></span>
       <span class="product-text"><strong>${localized(product.name)}</strong><strong>${money(product.price)}</strong></span>
       <span class="product-sub">${localized(product.color)} · ${t(product.technique)}</span>
@@ -70,7 +71,7 @@ function applyLanguage() {
 }
 function renderProduct(product) {
   productDialog.innerHTML = `<button class="close" data-close aria-label="${t('close')}">×</button>
-    <div class="detail-art">${mockup(product,localized(product.name))}</div>
+    <div class="detail-art">${mockup(product,localized(product.name),campaign)}</div>
     <form class="detail-copy" id="add-form"><p class="eyebrow">${t(product.technique)}</p><h2 id="product-title">${localized(product.name)}</h2>
     <p class="detail-price">${money(product.price)}</p><p>${localized(product.color)} · ${t(product.placement)}</p>
     <fieldset><legend>${t('size')}</legend><div class="size-options">${product.sizes.map((size,index) =>
@@ -99,7 +100,7 @@ function renderBag() {
   bagDialog.innerHTML = `<button class="close" data-close aria-label="${t('close')}">×</button><h2 id="bag-title">${t('bag') ?? 'Bag'}</h2>
     ${cart.length ? `<div class="bag-lines">${cart.map((line,index)=>{
       const product = lookup.get(line.id);
-      return `<article class="bag-line"><div class="bag-art">${mockup(product,localized(product.name))}</div>
+      return `<article class="bag-line"><div class="bag-art">${mockup(product,localized(product.name),campaign)}</div>
       <div><strong>${localized(product.name)}</strong><p>${localized(product.color)} / ${sizeText(line.size)}</p>
       <div class="quantity"><button data-line="${index}" data-change="-1" aria-label="${t('less')}">−</button><span aria-label="${t('quantity')}">${line.quantity}</span>
       <button data-line="${index}" data-change="1" aria-label="${t('more')}" ${line.quantity===99?'disabled':''}>+</button></div>

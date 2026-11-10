@@ -128,7 +128,7 @@ legend{font-size:13px;font-weight:700;margin-bottom:6px}
 .story-mark .raffia img{width:100%;height:clamp(160px,30vw,270px);object-fit:cover;object-position:50% 23%}
 .raffia figcaption{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-top:5px}
 .raffia a{text-decoration:underline}
-:root{--serif:'Bodoni Moda',Georgia,serif;--sans:'Space Grotesk',Arial,sans-serif}
+:root{--serif:Georgia,serif;--sans:'Space Grotesk',Arial,sans-serif}
 h1,h2{font-weight:600;font-optical-sizing:auto;letter-spacing:-.055em}
 h1 em,.page-title em{font-weight:600;color:var(--red)}
 .header nav{gap:clamp(12px,3vw,42px)}
@@ -175,3 +175,38 @@ blockquote{font:italic 600 clamp(40px,5vw,77px)/1.02 var(--serif);letter-spacing
 .detail-art .studio{max-width:420px}
 .bag-art{aspect-ratio:349/437}
 @media(max-width:600px){.detail-art .studio{width:min(68%,230px)}}
+:root{--display:'Matemasie','Space Grotesk',sans-serif}
+h1,h2,.motifs h3{font-family:var(--display);font-weight:400;line-height:1.01;letter-spacing:-.035em;overflow-wrap:anywhere}
+h1 em,.page-title em{font-weight:400;font-style:normal}
+h1{font-size:clamp(54px,8.6vw,137px)}
+h2{font-size:clamp(37px,5.25vw,81px)}
+.page-title{font-size:clamp(48px,7.9vw,118px)}
+.section-head .page-title{font-size:clamp(48px,7vw,108px)}
+.brand-quote{font:400 clamp(30px,4.2vw,65px)/1.08 var(--display);letter-spacing:-.03em}
+.archive-figure{position:relative;min-width:0;overflow:hidden;background:#dbccad}
+.archive-figure img{width:100%;height:100%;object-fit:cover}
+.archive-figure figcaption,.interlude .archive-figure figcaption,.about-lead .archive-figure figcaption{position:absolute;inset:auto auto 0 0;max-width:100%;padding:7px 11px;background:var(--ink);color:var(--paper);font-size:11px}
+.story-lead figure img{object-position:center 24%}
+.chapter-nav{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:center;padding:19px 5%;background:var(--gold)}
+.chapter{display:grid;grid-template-columns:minmax(0,1.18fr) minmax(0,1fr);border-bottom:1px solid var(--line);min-height:510px}
+.chapter:nth-of-type(odd){background:var(--soft)}
+.chapter:nth-of-type(odd) article{order:2}
+.chapter article{align-self:center;padding:clamp(28px,5.5vw,85px)}
+.chapter h2,.home-shop-notes h2,.home-contact h2,.home-story h2{margin:14px 0 16px}
+.chapter article>p:not(.eyebrow){margin-top:14px;max-width:62ch}
+.chapter .archive-figure img{position:absolute;object-position:center 35%}
+.chapter .brand-quote{font-size:clamp(26px,3vw,43px);color:var(--red);margin-bottom:0}
+.story-end,.home-quote{padding:30px 5% 44px;text-align:center;background:var(--gold)}
+.story-end .brand-quote,.home-quote .brand-quote{max-width:970px;margin:10px auto 22px}
+.home-quote .brand-quote{margin:10px auto 0}
+.home-story>div>p:not(.eyebrow),.home-shop-notes p:not(.eyebrow),.home-contact p:not(.eyebrow){max-width:52ch;margin-bottom:17px}
+.home-shop-notes,.home-contact{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}
+.home-shop-notes>article,.home-contact>div{padding:clamp(29px,6.7vw,105px);align-self:center}
+.home-shop-notes>article:last-child{align-self:stretch;display:grid;align-items:center;background:var(--soft);color:var(--red)}
+.home-contact .archive-figure img{position:absolute;object-position:center 48%}
+.featured .product-art{aspect-ratio:410/600}
+@media(max-width:650px){h1{font-size:clamp(56px,13vw,85px)}.page-title{font-size:clamp(44px,11vw,78px)}.chapter,.home-shop-notes,.home-contact{grid-template-columns:1fr}.chapter:nth-of-type(odd) article{order:0}.chapter .archive-figure,.home-contact .archive-figure{min-height:305px}.chapter-nav{justify-content:start}.home-shop-notes>article:last-child{padding-top:20px;padding-bottom:20px}}
+.secondary-archive .archive-diptych{grid-column:2;grid-row:1;display:grid;grid-template-columns:1fr 1fr;gap:3px;align-self:stretch;padding:0}
+.secondary-archive>div:last-child{grid-column:1;grid-row:1}
+.secondary-archive .archive-diptych figure{order:0;min-height:420px}
+@media(max-width:650px){.secondary-archive .archive-diptych,.secondary-archive>div:last-child{grid-column:1;grid-row:auto}.secondary-archive .archive-diptych figure{min-height:255px}}
