@@ -213,3 +213,5 @@ h2{font-size:clamp(37px,5.25vw,81px)}
 .secondary-archive .archive-diptych figure{order:0;min-height:420px}
 @media(max-width:650px){.secondary-archive .archive-diptych,.secondary-archive>div:last-child{grid-column:1;grid-row:auto}.secondary-archive .archive-diptych figure{min-height:255px}}
 .size-options input:disabled+span{opacity:.45;cursor:not-allowed;text-decoration:line-through}
+
+.featured-label{position:absolute;top:1rem;left:1rem;z-index:2;background:var(--red,#bd1826);color:#fff;padding:.35rem .6rem;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}.product-art .item-number{top:auto;bottom:1rem}

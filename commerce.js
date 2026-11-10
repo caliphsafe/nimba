@@ -4,6 +4,7 @@ let config;
 async function storefront(query, variables) {
   const response = await fetch(`https://${config.domain}/api/${apiVersion}/graphql.json`, {
     method: 'POST',
+    cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
       'X-Shopify-Storefront-Access-Token': config.publicToken

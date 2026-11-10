@@ -142,7 +142,7 @@
     });
   }
 
-  async function loadShopEditor(force = false) {
+  async function loadShopEditor(force = true) {
     if (state.loading) return;
     if (editorReady && !force) {
       renderAll();
@@ -165,6 +165,8 @@
       state.loading = false;
     }
   }
+
+  window.loadShopEditor = loadShopEditor;
 
   function renderAll() {
     state.featured = state.products
@@ -201,10 +203,21 @@
           </div>
           <strong>${esc(product.title)}</strong>
           <small>${esc(product.category)}</small>
+          <label>Position <select data-feature-position="${esc(product.id)}">${[1,2,3,4].map(n => `<option value="${n}" ${n === slot ? "selected" : ""}>${n}</option>`).join("")}</select></label>
           <button type="button" data-remove-feature="${esc(product.id)}">Remove</button>
         </div>
       `;
     }).join("");
+
+    wrap.querySelectorAll("[data-feature-position]").forEach(select => {
+      select.addEventListener("change", async () => {
+        select.disabled = true;
+        try {
+          await request("/api/admin-shop-editor", {method:"POST", body:JSON.stringify({action:"move", productId:select.dataset.featurePosition, slot:Number(select.value)})});
+        } catch (error) { alert(error.message); }
+        await loadShopEditor(true);
+      });
+    });
 
     wrap.querySelectorAll("[data-remove-feature]").forEach(button => {
       button.addEventListener("click", () => setFeatured(button.dataset.removeFeature, false));

@@ -1,3 +1,4 @@
+import { loadAdminProducts } from "./admin-products.js";
 import { shopifyAdminGraphql } from "./_shopify-admin.js";
 
 export default async function handler(req, res) {
@@ -26,18 +27,7 @@ export default async function handler(req, res) {
           }
         }
       `, { query: `created_at:>=${since}` }),
-      shopifyAdminGraphql(`
-        query DashboardProducts {
-          products(first: 100, query: "status:active OR status:draft") {
-            nodes {
-              id title
-              variants(first: 100) {
-                nodes { id title inventoryQuantity selectedOptions { name value } }
-              }
-            }
-          }
-        }
-      `),
+      loadAdminProducts().then(products => ({products:{nodes:products}})),
       shopifyAdminGraphql(`
         query DashboardAbandoned {
           abandonedCheckouts(first: 50, reverse: true) {

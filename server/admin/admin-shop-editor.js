@@ -147,6 +147,7 @@ export default async function handler(req, res) {
       action,
       productId,
       category,
+      slot: requestedSlot,
       featured,
       replaceProductId = null,
     } = req.body || {};
@@ -155,7 +156,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Product ID is required." });
     }
 
-    if (!["category","feature"].includes(action)) {
+    if (!["category","feature","move"].includes(action)) {
       return res.status(400).json({ error: "Unknown Shop Editor action." });
     }
 
@@ -169,6 +170,29 @@ export default async function handler(req, res) {
     if (action === "category") {
       const product = await updateCategory(productId, category);
       return res.status(200).json({ ok: true, product });
+    }
+
+    if (action === "move") {
+      const slot = Number(requestedSlot);
+      if (![1,2,3,4].includes(slot) || !target.featuredSlot) {
+        return res.status(400).json({error:"Choose a featured product and a position from 1 to 4."});
+      }
+      const occupant = products.find(product => product.id !== productId && product.featuredSlot === slot);
+      const changes = [{product:target, slot}, ...(occupant ? [{product:occupant, slot:target.featuredSlot}] : [])];
+      const featureTags = product => product.tags.filter(tag => /^NIMBA_FEATURED:/i.test(tag));
+      try {
+        for (const change of changes) {
+          await tagsRemove(change.product.id, featureTags(change.product));
+          await tagsAdd(change.product.id, [`${FEATURE_PREFIX}${change.slot}`]);
+        }
+      } catch (error) {
+        for (const change of changes) {
+          await tagsRemove(change.product.id, [1,2,3,4].map(n => `${FEATURE_PREFIX}${n}`));
+          await tagsAdd(change.product.id, featureTags(change.product));
+        }
+        throw error;
+      }
+      return res.status(200).json({ok:true, slot});
     }
 
     const targetFeatureTags = (target.tags || []).filter(tag => String(tag).toUpperCase().startsWith(FEATURE_PREFIX));

@@ -1,4 +1,4 @@
-import {products,liveProduct} from './catalog.js';
+import {liveProduct} from './catalog.js';
 import {contactEmail} from './contact-config.js';
 import {en,fr} from './locale.js';
 import {mockup,escapeHtml} from './mockups.js';
@@ -53,14 +53,13 @@ function renderProducts() {
   if (!cards) return;
   const featured = cards.hasAttribute('data-featured');
   const bySlot = catalog.filter(product => product.featuredSlot).sort((a,b) => a.featuredSlot-b.featuredSlot);
-  const favorites = [0,3,6,8].map(index => lookup.get(products[index].id)).filter(Boolean);
-  const display = featured ? (bySlot.length ? bySlot : [...new Set([...favorites,...catalog])]).slice(0,4) :
-    catalog.filter(product => category === 'all' || category === product.category);
+  const display = featured ? bySlot.slice(0,4) :
+    [...bySlot, ...catalog.filter(product => !product.featuredSlot)].filter(product => category === 'all' || category === product.category);
   cards.innerHTML = display.map(product => {
     const name = escapeHtml(localized(product.name));
     const id = escapeHtml(product.id);
     return `<article class="product-card"><a class="product-link" href="shop.html?product=${encodeURIComponent(product.id)}" data-product="${id}" aria-label="${t('detail')} ${name}">
-      <span class="product-art"><span class="item-number">${String(catalog.indexOf(product)+1).padStart(2,'0')} / ${catalog.length}</span>
+      <span class="product-art">${product.featuredSlot ? `<span class="featured-label">${language === 'fr' ? 'À la une' : 'Featured'} ${product.featuredSlot}</span>` : ''}<span class="item-number">${String(catalog.indexOf(product)+1).padStart(2,'0')} / ${catalog.length}</span>
       ${mockup(product,localized(product.name))}
       <span class="product-open" aria-hidden="true">↗</span></span>
       <span class="product-text"><strong>${name}</strong><strong>${money(product.price,product.currency)}</strong></span>
@@ -224,3 +223,23 @@ if (document.body.dataset.page === 'shop') {
   const requested = new URL(window.location.href).searchParams.get('product');
   if (lookup.has(requested)) openProduct(lookup.get(requested));
 }
+
+let refreshingCatalog = false;
+async function refreshCatalog() {
+  if (refreshingCatalog || document.hidden) return;
+  refreshingCatalog = true;
+  try {
+    catalog = (await loadCatalog()).map(liveProduct);
+    lookup = new Map(catalog.map(product => [product.id,product]));
+    cart = storedLines.filter(line => lookup.has(line.id));
+    live = true;
+    renderFilters();
+    renderProducts();
+    if (!bagDialog.open) updateBag();
+  } catch { /* Keep the last successfully loaded collection. */ }
+  finally { refreshingCatalog = false; }
+}
+window.addEventListener('focus', refreshCatalog);
+window.addEventListener('pageshow', event => { if (event.persisted) refreshCatalog(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshCatalog(); });
+setInterval(refreshCatalog, 30000);

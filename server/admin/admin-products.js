@@ -7,9 +7,21 @@ export default async function handler(req, res) {
 
 
   try {
+    const products = await loadAdminProducts();
+    return res.status(200).json({ products });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function loadAdminProducts() {
+    const products = [];
+    let cursor = null;
+    do {
     const data = await shopifyAdminGraphql(`
-      query AdminProducts {
-        products(first: 100, sortKey: UPDATED_AT, reverse: true) {
+      query AdminProducts($cursor: String) {
+        products(first: 5, after: $cursor, sortKey: UPDATED_AT, reverse: true) {
+          pageInfo { hasNextPage endCursor }
           nodes {
             id
             handle
@@ -62,10 +74,10 @@ export default async function handler(req, res) {
           }
         }
       }
-    `);
+    `, {cursor});
+    products.push(...(data.products?.nodes || []));
+    cursor = data.products?.pageInfo?.hasNextPage ? data.products.pageInfo.endCursor : null;
+    } while (cursor);
 
-    return res.status(200).json({ products: data.products?.nodes || [] });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
+    return products;
 }
