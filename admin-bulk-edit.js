@@ -421,6 +421,7 @@
 
         const payload = {
           productId: product.productId || null,
+          bulkUpload: !product.isExisting,
           title: String(product.name).trim(),
           descriptionHtml: textToHtml(product.description || ""),
           productType: product.type || "Product",

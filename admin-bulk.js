@@ -56,6 +56,20 @@ function inferBulkCategory(garmentClue = "") {
 function cleanBulkFilename(filename = "") {
   const withoutExt = String(filename).replace(/\.[^.]+$/, "").trim();
 
+  const fields = withoutExt.match(/^([^_]+)_([^_]+)_([^_]+)_\s*\$\s*(\d+(?:\.\d{1,2})?)\s*_\s*(\d+)$/);
+  if (fields) {
+    const [productName, garmentClue, color, price, photoNumber] = fields.slice(1)
+      .map(value => value.trim().replace(/\s+/g, " "));
+    const order = Number(photoNumber);
+    if (productName && garmentClue && color && Number.isSafeInteger(order) && order > 0) {
+      return {
+        productName, garmentClue, color, price, order,
+        category: inferBulkCategory(garmentClue),
+        matchedFormat: true,
+      };
+    }
+  }
+
   let order = null;
   let base = withoutExt;
 
@@ -78,16 +92,7 @@ function cleanBulkFilename(filename = "") {
 
   if (!base) base = withoutExt;
 
-  // Preferred filename format:
-  // name_garment type [color] $price.png
-  //
-  // Example:
-  // speed_light heavyweight hoodie [black] $60.png
-  //
-  // Product name: speed_light heavyweight hoodie
-  // Category clue: light heavyweight hoodie -> Hoodies
-  // Color: black
-  // Price: 60
+  // Keep compatibility with the earlier bracketed color and parenthesized photo number.
   const formatMatch = base.match(
     /^(.+?)_(.+?)\s*\[([^\]]+)\]\s*\$\s*(\d+(?:\.\d{1,2})?)\s*$/i
   );
@@ -147,13 +152,13 @@ function ingestBulkFiles(files) {
 
   imageFiles.forEach((file, inputIndex) => {
     const parsed = cleanBulkFilename(file.name);
-    // Color is part of the grouping key so two colorways with the same
-    // product name do not get merged into one product card.
-    const key = `${parsed.productName.toLowerCase()}||${String(parsed.color || "").toLowerCase()}`;
+    const key = JSON.stringify([parsed.productName, parsed.garmentClue, parsed.color]
+      .map(value => value.toLowerCase()));
 
     if (!groups.has(key)) {
       groups.set(key, {
         id: makeBulkId("product"),
+        filenameGroup: key,
         name: parsed.productName,
         price: parsed.price || "",
         type: parsed.category || "Accessories",
@@ -187,11 +192,8 @@ function ingestBulkFiles(files) {
       return a.inputIndex - b.inputIndex;
     });
 
-    const existing = BULK_PRODUCTS.find(
-      (product) =>
-        product.name.toLowerCase() === group.name.toLowerCase() &&
-        String(product.color || "").toLowerCase() === String(group.color || "").toLowerCase()
-    );
+    const existing = BULK_PRODUCTS.find(product =>
+      product.state !== "success" && product.filenameGroup === group.filenameGroup);
 
     if (existing) {
       existing.images.push(...group.images);
@@ -476,6 +478,7 @@ function bindBulkProductCard(productId) {
       ...product,
       id: makeBulkId("product"),
       name: `${product.name} Copy`,
+      filenameGroup: null,
       images: [...product.images],
       sizes: product.sizes.map((size) => ({ ...size })),
       collectionIds: [...product.collectionIds],
