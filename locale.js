@@ -57,9 +57,11 @@ Object.assign(fr, storyFrench, {storyTitle:'L’histoire de D’mba — Nimba'})
 
 Object.assign(en, {
   noProducts:'No pieces available here yet.', soldOut:'Unavailable',
+  catalogUnavailable:'The collection is temporarily unavailable. Please check back soon.',
   bagUnavailable:'Remove unavailable items to continue to checkout.'
 });
 Object.assign(fr, {
   noProducts:'Aucune pièce disponible pour le moment.', soldOut:'Indisponible',
+  catalogUnavailable:'La collection est temporairement indisponible. Veuillez réessayer bientôt.',
   bagUnavailable:'Retirez les articles indisponibles pour poursuivre la commande.'
 });

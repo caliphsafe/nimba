@@ -11,9 +11,9 @@ const productDialog = one('#product-dialog');
 const bagDialog = one('#bag-dialog');
 const languageButton = one('#language');
 const status = one('#status');
-let catalog = products;
+let catalog = [];
 let live = false;
-let lookup = new Map(products.map(product => [product.id,product]));
+let lookup = new Map();
 const staticCopy = [...document.querySelectorAll('[data-i]')].map(node => [node,node.textContent]);
 const categories = ['all','tees','layers','polos','accessories'];
 
@@ -66,7 +66,7 @@ function renderProducts() {
       <span class="product-text"><strong>${name}</strong><strong>${money(product.price,product.currency)}</strong></span>
       <span class="product-sub">${escapeHtml(listDetails(product))}</span>
     </a></article>`;
-  }).join('') || `<p>${t('noProducts')}</p>`;
+  }).join('') || `<p>${t(live?'noProducts':'catalogUnavailable')}</p>`;
 }
 function applyLanguage() {
   document.documentElement.lang = language;
@@ -210,14 +210,12 @@ if (contactForm && contactEmail) {
 
 try {
   const availableCatalog = (await loadCatalog()).map(liveProduct);
-  if (availableCatalog.length) {
-    catalog = availableCatalog;
-    lookup = new Map(catalog.map(product => [product.id,product]));
-    cart = storedLines.filter(line => lookup.has(line.id));
-    live = true;
-  }
+  catalog = availableCatalog;
+  lookup = new Map(catalog.map(product => [product.id,product]));
+  cart = storedLines.filter(line => lookup.has(line.id));
+  live = true;
 } catch {
-  // The editorial catalog remains browsable while Shopify is unavailable.
+  // Leave product listings empty until Shopify can supply the catalog.
 }
 
 applyLanguage();
