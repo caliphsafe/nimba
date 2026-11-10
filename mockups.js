@@ -13,19 +13,11 @@ const placement = {
   'market-tote': [50,55,53]
 };
 
-const campaignPlacement = {
-  'great-mother-tee': [50,34,24],
-  'heritage-hoodie': [50,51,11],
-  'signature-polo': [65,32,6],
-  'coast-cap': [47,39,10]
-};
-
-export function mockup(product, alt, campaign = false) {
-  const hasCampaign = campaign && Object.hasOwn(campaignPlacement,product.id);
-  const [x,y,width] = (hasCampaign ? campaignPlacement : placement)[product.id];
+export function mockup(product, alt) {
+  const [x,y,width] = placement[product.id];
   const technique = product.technique==='embroidered' ? 'stitch' : 'ink';
-  return `<span class="garment studio${hasCampaign ? " campaign" : ""}" style="--art-x:${x}%;--art-y:${y}%;--art-width:${width}%">
-    <img class="blank" src="assets/${hasCampaign ? "campaign" : "products"}/${product.id}.webp" alt="${alt}" width="${hasCampaign ? 410 : 349}" height="${hasCampaign ? 600 : 437}" loading="lazy">
+  return `<span class="garment studio" style="--art-x:${x}%;--art-y:${y}%;--art-width:${width}%">
+    <img class="blank" src="assets/products/${product.id}.webp" alt="${alt}" width="349" height="437" loading="lazy">
     <span class="artwork ${technique} ${product.mark}" aria-hidden="true">
       <img src="assets/${product.mark}.webp" alt="">
     </span>

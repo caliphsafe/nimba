@@ -60,7 +60,7 @@ h2{font-size:clamp(44px,6.4vw,99px)}
 .filters button{border:1px solid var(--line);background:transparent;padding:7px 13px;font-size:12px;font-weight:700}
 .filters button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px 15px}
-.product-link{width:100%;padding:0;border:0;background:none;text-align:left}
+.product-link{display:block;width:100%;padding:0;border:0;background:none;text-align:left}
 .product-art,.detail-art,.bag-art{display:grid;place-items:center;background:radial-gradient(ellipse at 50% 42%,#f1e7d4 0%,#e6d8bf 85%)}
 .product-art{position:relative;overflow:hidden;aspect-ratio:1/.98}
 .product-card:nth-child(3n+2) .product-art{background:radial-gradient(ellipse,#efeadc,#ded7c4)}
@@ -97,7 +97,7 @@ dialog::backdrop{background:#191a15a6}
 #product-dialog[open]{display:grid;grid-template-columns:1fr 1fr;width:760px}
 .close{position:absolute;right:12px;top:12px;display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--line);background:var(--paper);font-size:24px;line-height:1;z-index:1}
 .detail-copy{padding:50px 23px 24px}
-.detail-copy h2,.drawer h2{font-size:clamp(36px,5vw,55px);margin:8px 0 14px}
+.detail-copy h2,.drawer h2{font-size:clamp(32px,4vw,48px);margin:8px 0 14px}
 .detail-copy .eyebrow{color:var(--red)}
 .detail-price{font-weight:700;margin-bottom:7px}
 fieldset{border:0;padding:0;margin:19px 0}
@@ -175,14 +175,14 @@ blockquote{font:italic 600 clamp(40px,5vw,77px)/1.02 var(--serif);letter-spacing
 .detail-art .studio{max-width:420px}
 .bag-art{aspect-ratio:349/437}
 @media(max-width:600px){.detail-art .studio{width:min(68%,230px)}}
-:root{--display:'Matemasie','Space Grotesk',sans-serif}
-h1,h2,.motifs h3{font-family:var(--display);font-weight:400;line-height:1.01;letter-spacing:-.035em;overflow-wrap:anywhere}
+:root{--display:'Pacifico',cursive}
+h1,h2,.motifs h3{font-family:var(--display);font-weight:400;line-height:1.2;letter-spacing:normal;overflow-wrap:anywhere}
 h1 em,.page-title em{font-weight:400;font-style:normal}
 h1{font-size:clamp(54px,8.6vw,137px)}
 h2{font-size:clamp(37px,5.25vw,81px)}
 .page-title{font-size:clamp(48px,7.9vw,118px)}
 .section-head .page-title{font-size:clamp(48px,7vw,108px)}
-.brand-quote{font:400 clamp(30px,4.2vw,65px)/1.08 var(--display);letter-spacing:-.03em}
+.brand-quote{font:400 clamp(30px,4.2vw,65px)/1.25 var(--display);letter-spacing:normal}
 .archive-figure{position:relative;min-width:0;overflow:hidden;background:#dbccad}
 .archive-figure img{width:100%;height:100%;object-fit:cover}
 .archive-figure figcaption,.interlude .archive-figure figcaption,.about-lead .archive-figure figcaption{position:absolute;inset:auto auto 0 0;max-width:100%;padding:7px 11px;background:var(--ink);color:var(--paper);font-size:11px}
@@ -204,7 +204,6 @@ h2{font-size:clamp(37px,5.25vw,81px)}
 .home-shop-notes>article,.home-contact>div{padding:clamp(29px,6.7vw,105px);align-self:center}
 .home-shop-notes>article:last-child{align-self:stretch;display:grid;align-items:center;background:var(--soft);color:var(--red)}
 .home-contact .archive-figure img{position:absolute;object-position:center 48%}
-.featured .product-art{aspect-ratio:410/600}
 @media(max-width:650px){h1{font-size:clamp(56px,13vw,85px)}.page-title{font-size:clamp(44px,11vw,78px)}.chapter,.home-shop-notes,.home-contact{grid-template-columns:1fr}.chapter:nth-of-type(odd) article{order:0}.chapter .archive-figure,.home-contact .archive-figure{min-height:305px}.chapter-nav{justify-content:start}.home-shop-notes>article:last-child{padding-top:20px;padding-bottom:20px}}
 .secondary-archive .archive-diptych{grid-column:2;grid-row:1;display:grid;grid-template-columns:1fr 1fr;gap:3px;align-self:stretch;padding:0}
 .secondary-archive>div:last-child{grid-column:1;grid-row:1}

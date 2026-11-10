@@ -14,9 +14,9 @@ Once the production domain is set, add a canonical URL, absolute social image UR
 
 The site has four static pages: `index.html`, `shop.html`, `story.html`, and `contact.html`. The former About URL redirects to Story. Language and shopping bag preferences are shared across pages on the same origin. Set the public brand inbox in `contact-config.js` to enable the contact form, which opens a prefilled email draft.
 
-The product images under `assets/products/` and `assets/campaign/` are AI-generated studio mockups of blank garments. The original supplied artwork is layered onto the mockups separately.
+The product images under `assets/products/` are AI-generated studio mockups of blank garments. The original supplied artwork is layered onto the mockups separately.
 
-Matemasie by Adam Yeo and Space Grotesk are locally hosted. The SIL Open Font Licenses are in `assets/`.
+Pacifico and Space Grotesk are locally hosted. The SIL Open Font Licenses are in `assets/`.
 
 ## Archive credits
 
