@@ -9,7 +9,7 @@ const equal = (left, right) => timingSafeEqual(digest(left), digest(right));
 function sign(payload) {
   const secret = process.env.ADMIN_SESSION_SECRET;
   const password = process.env.ADMIN_PASSWORD;
-  if (!secret || secret.length < 32 || !password || password.length < 20) return null;
+  if (!secret || secret.length < 32 || !password) return null;
   return createHmac("sha256", secret).update(digest(password)).update(payload).digest("base64url");
 }
 

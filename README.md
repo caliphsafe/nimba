@@ -53,7 +53,7 @@ Vercel builds the storefront and staff interface into `dist` and deploys the sep
 Set these variables in the Nimba Vercel project and redeploy:
 
 - `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_CLIENT_ID`, `SHOPIFY_CLIENT_SECRET`: Nimba Shopify Admin app credentials. Keep the secret sensitive and server-side.
-- `ADMIN_PASSWORD`: a unique random staff password, at least 20 characters. `ADMIN_SESSION_SECRET`: a separate random value at least 32 characters long. Mark both sensitive. `ADMIN_USERNAME` defaults to `nimba`.
+- `ADMIN_PASSWORD`: a nonempty staff password. `ADMIN_SESSION_SECRET`: a separate random value at least 32 characters long. Mark both sensitive. `ADMIN_USERNAME` defaults to `nimba`.
 - `SHOPIFY_STOREFRONT_PUBLIC_TOKEN`: an optional override for the token marked **Public** in Shopify's Headless channel. The site already includes the Nimba public token for the configured Nimba store. This value is intentionally browser-accessible. Use `SHOPIFY_COLLECTION_HANDLE` if the collection handle differs from `nimba`. Publish the collection and each product to Headless. An empty collection displays an empty state. If Shopify cannot be reached, the storefront displays a temporary-unavailability message. Both states keep checkout closed.
 - `SHOPIFY_HEADLESS_PUBLICATION_ID`: optional explicit Shopify Publication GID. Set it if more than one publication matches or Shopify labels Headless differently.
 - `MODELS_SCRIPT_URL`, `MODELS_API_SECRET`: optional credentials for a separate Nimba Models Apps Script deployment. The Models tab requires that service.
