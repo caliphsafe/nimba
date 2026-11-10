@@ -16,7 +16,7 @@ The site has four static pages: `index.html`, `shop.html`, `story.html`, and `co
 
 The product images under `assets/products/` are AI-generated studio mockups of blank garments. The original supplied artwork is layered onto the mockups separately.
 
-Pacifico and Space Grotesk are locally hosted. The SIL Open Font Licenses are in `assets/`.
+Calistoga and Space Grotesk are locally hosted. The SIL Open Font Licenses are in `assets/`.
 
 ## Archive credits
 

@@ -10,7 +10,7 @@
   --admin-gold: #e7b85a;
   --sans: "Space Grotesk", Arial, sans-serif;
   --mono: var(--sans);
-  --admin-script: "Pacifico", cursive;
+  --admin-script: "Calistoga", Georgia, serif;
 }
 
 body { font: 13px/1.5 var(--sans); }

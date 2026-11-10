@@ -175,7 +175,7 @@ blockquote{font:italic 600 clamp(40px,5vw,77px)/1.02 var(--serif);letter-spacing
 .detail-art .studio{max-width:420px}
 .bag-art{aspect-ratio:349/437}
 @media(max-width:600px){.detail-art .studio{width:min(68%,230px)}}
-:root{--display:'Pacifico',cursive}
+:root{--display:'Calistoga',Georgia,serif}
 h1,h2,.motifs h3{font-family:var(--display);font-weight:400;line-height:1.2;letter-spacing:normal;overflow-wrap:anywhere}
 h1 em,.page-title em{font-weight:400;font-style:normal}
 h1{font-size:clamp(54px,8.6vw,137px)}
