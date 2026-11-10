@@ -5,7 +5,7 @@
 .header nav a:hover .nav-glyph{transform:translateY(-3px)}
 .header nav a[aria-current=page] .nav-glyph{background:var(--soft);border-radius:50%}
 .eyebrow.rule::before{display:none}
-.eyebrow.rule .carved-icon{width:30px;height:30px}
+.eyebrow.rule .carved-icon{position:static;width:30px;height:30px;object-fit:contain;object-position:center}
 .button-glyph{width:27px;height:27px;filter:brightness(0) invert(1)}
 .button{transition:background .2s ease,box-shadow .2s ease,transform .2s ease;position:relative}
 .button:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--gold)}
