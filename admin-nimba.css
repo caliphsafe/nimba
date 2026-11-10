@@ -202,3 +202,5 @@ body :focus-visible { outline: 2px solid var(--admin-red); outline-offset: 3px; 
 @media (max-width: 420px) {
   .admin-app .ops-form-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+.admin-nav-link{display:flex;align-items:center;gap:10px}.admin-carved-icon{width:25px;height:25px;flex:none;filter:brightness(0) invert(1)}.admin-nav-link.is-active .admin-carved-icon{filter:none}

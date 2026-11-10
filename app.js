@@ -1,3 +1,4 @@
+import {carvedIcon,initHeritage} from './heritage.js';
 import {liveProduct} from './catalog.js';
 import {contactEmail} from './contact-config.js';
 import {en,fr} from './locale.js';
@@ -59,13 +60,13 @@ function renderProducts() {
     const name = escapeHtml(localized(product.name));
     const id = escapeHtml(product.id);
     return `<article class="product-card"><a class="product-link" href="shop.html?product=${encodeURIComponent(product.id)}" data-product="${id}" aria-label="${t('detail')} ${name}">
-      <span class="product-art">${product.featuredSlot ? `<span class="featured-label">${language === 'fr' ? 'À la une' : 'Featured'} ${product.featuredSlot}</span>` : ''}<span class="item-number">${String(catalog.indexOf(product)+1).padStart(2,'0')} / ${catalog.length}</span>
+      <span class="product-art">${product.featuredSlot ? `<span class="featured-label">${language === 'fr' ? 'À la une' : 'Featured'}</span>` : ''}<span class="item-number">${carvedIcon(product.mark === 'guinee' ? 'connection' : 'story')}</span>
       ${mockup(product,localized(product.name))}
-      <span class="product-open" aria-hidden="true">↗</span></span>
+      <span class="product-open" aria-hidden="true">${carvedIcon('arrow')}</span></span>
       <span class="product-text"><strong>${name}</strong><strong>${money(product.price,product.currency)}</strong></span>
       <span class="product-sub">${escapeHtml(listDetails(product))}</span>
     </a></article>`;
-  }).join('') || `<p>${t(live?'noProducts':'catalogUnavailable')}</p>`;
+  }).join('') || (featured && live ? '' : `<p>${t(live?'noProducts':'catalogUnavailable')}</p>`);
 }
 function applyLanguage() {
   document.documentElement.lang = language;
@@ -73,12 +74,13 @@ function applyLanguage() {
   document.title = t(page==='home'?'title':page+'Title');
   for (const [node,original] of staticCopy) node.textContent = t(node.dataset.i) ?? original;
   document.querySelectorAll('[data-label]').forEach(node => node.setAttribute('aria-label',t(node.dataset.label)));
-  document.querySelectorAll('[data-alt]').forEach(node => node.alt = t(node.dataset.alt));
+  document.querySelectorAll('[data-alt]').forEach(node => node.alt = t(node.dataset.alt) ?? node.alt);
   languageButton.textContent = language==='fr'?'EN':'FR';
   languageButton.lang = language==='fr'?'en':'fr';
   languageButton.setAttribute('aria-label',language==='fr'?'Switch to English':'Passer en français');
   renderFilters();
   renderProducts();
+  updateHeritage();
 }
 function renderProduct(product) {
   const firstSize = product.sizes.find(size => purchasable(product,size));
@@ -86,6 +88,7 @@ function renderProduct(product) {
     <div class="detail-art">${mockup(product,localized(product.name))}</div>
     <form class="detail-copy" id="add-form"><p class="eyebrow">${t(product.technique) || ''}</p><h2 id="product-title">${escapeHtml(localized(product.name))}</h2>
     <p class="detail-price">${money(product.price,product.currency)}</p><p>${escapeHtml(productDetails(product))}</p>
+    <details class="piece-story"><summary>${carvedIcon(product.mark === 'guinee' ? 'connection' : 'story')}<span>${t('pieceMeaning')}</span></summary><p>${t(product.mark === 'guinee' ? 'scriptStory' : 'pieceStory')}</p><a class="under" href="story.html">${t('pieceStoryLink')}</a></details>
     <fieldset><legend>${t('size')}</legend><div class="size-options">${product.sizes.map(size =>
       `<label><input type="radio" name="size" value="${escapeHtml(size)}" ${size===firstSize?'checked':''} ${purchasable(product,size)?'':'disabled'}><span>${escapeHtml(sizeText(size))}</span></label>`).join('')}</div></fieldset>
     <button type="submit" class="button red" ${firstSize?'':'disabled'}>${t(firstSize?'add':'soldOut')}</button></form>`;
@@ -107,6 +110,9 @@ function renderProduct(product) {
     productDialog.close();
     bagDialog.showModal();
     status.textContent = t('added');
+    one('#bag').classList.remove('bag-added');
+    requestAnimationFrame(() => one('#bag').classList.add('bag-added'));
+    setTimeout(() => one('#bag').classList.remove('bag-added'),700);
   });
 }
 function updateBag() {
@@ -207,6 +213,8 @@ if (contactForm && contactEmail) {
   });
 }
 
+const updateHeritage = initHeritage({getProducts:() => catalog, getLanguage:() => language, money, translate:t});
+
 try {
   const availableCatalog = (await loadCatalog()).map(liveProduct);
   catalog = availableCatalog;
@@ -235,6 +243,7 @@ async function refreshCatalog() {
     live = true;
     renderFilters();
     renderProducts();
+    updateHeritage();
     if (!bagDialog.open) updateBag();
   } catch { /* Keep the last successfully loaded collection. */ }
   finally { refreshingCatalog = false; }
