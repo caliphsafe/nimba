@@ -17,6 +17,7 @@ import productsHandler from "../server/admin/admin-products.js";
 import sessionHandler from "../server/admin/admin-session.js";
 import shopEditorHandler from "../server/admin/admin-shop-editor.js";
 import uploadHandler from "../server/admin/admin-upload.js";
+import {listShopPublications} from "../server/admin/_shopify-admin.js";
 import {requireAdmin} from "../server/admin/_admin-auth.js";
 
 const actions = Object.freeze({
@@ -36,10 +37,24 @@ const actions = Object.freeze({
   "product-status": productStatusHandler,
   "product": productHandler,
   "products": productsHandler,
+  "publications": publicationsHandler,
   "session": sessionHandler,
   "shop-editor": shopEditorHandler,
   "upload": uploadHandler,
 });
+
+async function publicationsHandler(req, res) {
+  if (req.method !== "GET") return res.status(405).json({error: "Method not allowed"});
+  try {
+    const publications = await listShopPublications();
+    return res.status(200).json({
+      publications,
+      configuredId: process.env.SHOPIFY_HEADLESS_PUBLICATION_ID?.trim() || null
+    });
+  } catch (error) {
+    return res.status(502).json({error: error.message});
+  }
+}
 
 export default async function admin(req, res) {
   res.setHeader("Cache-Control", "private, no-store");

@@ -62,22 +62,56 @@ export async function getPrimaryLocation() {
   return data.locations?.nodes[0] || null;
 }
 
-export async function getHeadlessPublication() {
-  const configured = process.env.SHOPIFY_HEADLESS_PUBLICATION_ID;
+const publicationIdPattern = /^gid:\/\/shopify\/Publication\/\d+$/;
+const isHeadless = name => /\bheadless\b/i.test(name || "");
+
+export async function listShopPublications() {
+  const nodes = [];
+  let cursor = null;
+  do {
+    const data = await shopifyAdminGraphql(`query NimbaPublications($cursor: String) {
+      publications(first: 25, after: $cursor) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id name
+          catalog {
+            title
+            ... on AppCatalog { apps(first: 5) { nodes { title } } }
+          }
+        }
+      }
+    }`, {cursor});
+    nodes.push(...data.publications.nodes);
+    cursor = data.publications.pageInfo.hasNextPage ? data.publications.pageInfo.endCursor : null;
+  } while (cursor);
+  return nodes.map(publication => ({
+    id: publication.id,
+    name: publication.catalog?.title || publication.name || publication.id,
+    apps: publication.catalog?.apps?.nodes.map(app => app.title) || [],
+    headless: [publication.name, publication.catalog?.title,
+      ...(publication.catalog?.apps?.nodes.map(app => app.title) || [])].some(isHeadless)
+  }));
+}
+
+export async function getHeadlessPublication(selectedId) {
+  const configured = process.env.SHOPIFY_HEADLESS_PUBLICATION_ID?.trim();
   if (configured) {
-    if (!/^gid:\/\/shopify\/Publication\/\d+$/.test(configured)) throw new Error("Invalid Headless publication ID.");
+    if (!publicationIdPattern.test(configured)) throw new Error("Invalid Headless publication ID.");
     return configured;
   }
 
-  const data = await shopifyAdminGraphql(`{
-    publications(first: 100) { nodes { id name catalog { title } } }
-  }`);
-  const matches = data.publications.nodes.filter(publication =>
-    [publication.name, publication.catalog?.title].some(name => name?.trim().toLowerCase() === "headless"));
-  if (matches.length !== 1) {
-    throw new Error("Could not identify one Headless publication. Configure SHOPIFY_HEADLESS_PUBLICATION_ID before publishing.");
+  const publications = await listShopPublications();
+  if (selectedId) {
+    if (!publicationIdPattern.test(selectedId) || !publications.some(item => item.id === selectedId)) {
+      throw new Error("The saved Shopify channel is no longer available. Choose it again in Admin → Settings.");
+    }
+    return selectedId;
   }
-  return matches[0].id;
+
+  const matches = publications.filter(publication => publication.headless);
+  if (matches.length === 1) return matches[0].id;
+
+  throw new Error("Choose your Nimba Headless channel in Admin → Settings → Shopify Publishing, then retry.");
 }
 
 export async function publishToHeadless(productId, publicationId) {

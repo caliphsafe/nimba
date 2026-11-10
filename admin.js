@@ -13,7 +13,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   await checkSession();
 });
 
+const publicationPreference = "nimba_shopify_publication";
+
+function selectedPublication() {
+  try { return localStorage.getItem(publicationPreference) || ""; }
+  catch { return ""; }
+}
+
 async function apiJson(url, options = {}) {
+  const publication = options.method === "POST" &&
+    ["/api/admin-product-save","/api/admin-product-status"].includes(url) ? selectedPublication() : "";
   let response;
 
   try {
@@ -23,6 +32,7 @@ async function apiJson(url, options = {}) {
       headers: {
         "Content-Type": "application/json",
         ...(options.headers || {}),
+        ...(publication ? {"X-Nimba-Publication": publication} : {}),
       },
     });
   } catch (error) {

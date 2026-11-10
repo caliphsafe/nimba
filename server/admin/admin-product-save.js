@@ -111,7 +111,7 @@ export default async function handler(req, res) {
     const normalizedStatus = ["ACTIVE", "DRAFT"].includes(status)
       ? status
       : "DRAFT";
-    const publicationId = normalizedStatus === "ACTIVE" ? await getHeadlessPublication() : null;
+    const publicationId = normalizedStatus === "ACTIVE" ? await getHeadlessPublication(req.headers["x-nimba-publication"]) : null;
 
     const productOptions = [{
       name: "Size",
