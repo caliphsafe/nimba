@@ -1,4 +1,5 @@
 import {products} from './catalog.js';
+import {contactEmail} from './contact-config.js';
 import {en,fr} from './locale.js';
 import {mockup} from './mockups.js';
 import {checkout,checkoutAvailable} from './commerce.js';
@@ -36,11 +37,14 @@ const money = amount => new Intl.NumberFormat(language==='fr'?'fr-FR':'en-US',{
 }).format(amount);
 
 function renderFilters() {
+  if (!filters) return;
   filters.innerHTML = categories.map(key =>
     `<button type="button" data-filter="${key}" aria-pressed="${key===category}">${t(key)}</button>`).join('');
 }
 function renderProducts() {
+  if (!cards) return;
   cards.innerHTML = products.map((product,index) => {
+    if (cards.hasAttribute('data-featured') && ![0,3,6,8].includes(index)) return '';
     if (category !== 'all' && category !== product.category) return '';
     return `<article class="product-card"><button class="product-link" data-product="${product.id}" aria-label="${t('detail')} ${localized(product.name)}">
       <span class="product-art"><span class="item-number">${String(index+1).padStart(2,'0')} / 10</span>
@@ -53,7 +57,8 @@ function renderProducts() {
 }
 function applyLanguage() {
   document.documentElement.lang = language;
-  document.title = t('title');
+  const page = document.body.dataset.page;
+  document.title = t(page==='home'?'title':page+'Title');
   for (const [node,original] of staticCopy) node.textContent = t(node.dataset.i) ?? original;
   document.querySelectorAll('[data-label]').forEach(node => node.setAttribute('aria-label',t(node.dataset.label)));
   document.querySelectorAll('[data-alt]').forEach(node => node.alt = t(node.dataset.alt));
@@ -111,14 +116,14 @@ one('#language').addEventListener('click',()=>{
   applyLanguage();
   renderBag();
 });
-filters.addEventListener('click',event=>{
+filters?.addEventListener('click',event=>{
   const button = event.target.closest('[data-filter]');
   if (!button) return;
   category = button.dataset.filter;
   for (const filter of filters.querySelectorAll('button')) filter.setAttribute('aria-pressed',String(filter===button));
   renderProducts();
 });
-cards.addEventListener('click',event=>{
+cards?.addEventListener('click',event=>{
   const button = event.target.closest('[data-product]');
   if (!button) return;
   renderProduct(lookup.get(button.dataset.product));
@@ -153,6 +158,18 @@ bagDialog.addEventListener('click',async event=>{
     }
   }
 });
+
+const contactForm = one('#contact-form');
+if (contactForm && contactEmail) {
+  contactForm.hidden = false;
+  one('#contact-note').hidden = true;
+  contactForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const fields = new FormData(contactForm);
+    const body = [fields.get('name'), fields.get('email'), '', fields.get('message')].join('\n');
+    window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(t('contactHeading'))}&body=${encodeURIComponent(body)}`;
+  });
+}
 
 applyLanguage();
 updateBag();

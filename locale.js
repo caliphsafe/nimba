@@ -14,3 +14,39 @@ export const en = {
 bag:'Bag',nav:'Main menu',filter:'Filter collection',mask:'Carved Baga D’mba shoulder mask from Guinea',
 all:'All pieces',tees:'Tees',layers:'Sweats',polos:'Polos',accessories:'Accessories',printed:'Screen printed',embroidered:'Embroidered',size:'Size',os:'One size',add:'Add to bag',added:'Added to your bag.',close:'Close',empty:'Your bag is empty.',continue:'Continue shopping',subtotal:'Subtotal',pending:'Online orders open soon.',checkout:'Checkout',loading:'Loading…',error:'Checkout could not open. Please try again.',less:'Decrease quantity',more:'Increase quantity',remove:'Remove',quantity:'Quantity',detail:'View',title:'Nimba — Wear the Story',credit:'Photo: Francesco Bini',raffia:'D’mba with a raffia skirt',raffiaCaption:'D’mba in raffia',back:'Screen print on the back',front:'Screen print on the front',script:'Screen-printed Guinée artwork',chest:'Embroidered left-chest emblem',cap:'Embroidered front emblem',motifs:'Motifs'
 };
+
+Object.assign(en, {
+  home:'Home',about:'About',contact:'Contact',viewAll:'Shop all ten pieces',
+  featuredCopy:'The D’mba profile in ink and thread. Discover four pieces from the debut collection.',
+  detailMask:'Detail of a carved Baga Nimba mask', translated:'',
+  quoteHome:'“the joy of living and the promise of an abundant harvest”',
+  quoteShop:'“the careful detailing of the hairstyle”',
+  quoteAbout:'“a symbol of motherhood”',quoteContact:'“to honor visitors”',
+  aboutLine:'Before the',aboutLine2:'emblem.',
+  aboutIntro:'To know Nimba, start with D’mba. On Guinea’s coast, the Baga gave her a form, a movement, and a place in the life of the community.',
+  contactTag:'03 / Correspondence',contactLine:'Let’s',contactLine2:'talk.',
+  contactIntro:'Questions about the collection, sizing, or the story behind a piece? Start here.',
+  contactOrders:'Can I place an order?',contactOrdersCopy:'You can browse and build a bag now. Online checkout will open once orders are ready.',
+  contactSize:'Where can I find sizes?',contactSizeCopy:'Open any piece in the shop to see its available sizes.',
+  contactHeading:'Write to Nimba',contactNote:'The brand inbox is coming soon.',
+  contactName:'Name',contactEmail:'Email',contactMessage:'Message',contactSubmit:'Open email draft',
+  shopTitle:'Shop the Collection — Nimba',aboutTitle:'The Story of D’mba — Nimba',contactTitle:'Contact — Nimba'
+});
+
+Object.assign(fr, {
+  home:'Accueil',about:'À propos',contact:'Contact',viewAll:'Voir les dix pièces',
+  featuredCopy:'Le profil de D’mba, en encre et en fil. Découvrez quatre pièces de la première collection.',
+  detailMask:'Détail d’un masque Nimba sculpté par un artiste baga',translated:'Traduit de l’anglais',
+  quoteHome:'« la joie de vivre et la promesse d’une récolte abondante »',
+  quoteShop:'« la finesse des détails de la coiffure »',
+  quoteAbout:'« un symbole de la maternité »',quoteContact:'« pour honorer les visiteurs »',
+  aboutLine:'Avant',aboutLine2:'l’emblème.',
+  aboutIntro:'Pour comprendre Nimba, il faut rencontrer D’mba. Sur le littoral guinéen, les Baga lui ont donné une forme, un mouvement et une place dans la vie de la communauté.',
+  contactTag:'03 / Correspondance',contactLine:'Parlons',contactLine2:'ensemble.',
+  contactIntro:'Une question sur la collection, les tailles ou l’histoire d’une pièce ? Vous êtes au bon endroit.',
+  contactOrders:'Puis-je passer commande ?',contactOrdersCopy:'Vous pouvez explorer la collection et remplir votre panier. Les commandes en ligne ouvriront bientôt.',
+  contactSize:'Où trouver les tailles ?',contactSizeCopy:'Ouvrez une fiche produit pour voir les tailles proposées.',
+  contactHeading:'Écrire à Nimba',contactNote:'Notre adresse de contact sera disponible prochainement.',
+  contactName:'Nom',contactEmail:'E-mail',contactMessage:'Message',contactSubmit:'Ouvrir le brouillon',
+  shopTitle:'La collection — Nimba',aboutTitle:'L’histoire de D’mba — Nimba',contactTitle:'Contact — Nimba'
+});

@@ -128,3 +128,50 @@ legend{font-size:13px;font-weight:700;margin-bottom:6px}
 .story-mark .raffia img{width:100%;height:clamp(160px,30vw,270px);object-fit:cover;object-position:50% 23%}
 .raffia figcaption{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-top:5px}
 .raffia a{text-decoration:underline}
+:root{--serif:'Bodoni Moda',Georgia,serif;--sans:'Space Grotesk',Arial,sans-serif}
+h1,h2{font-weight:600;font-optical-sizing:auto;letter-spacing:-.055em}
+h1 em,.page-title em{font-weight:600;color:var(--red)}
+.header nav{gap:clamp(12px,3vw,42px)}
+.header nav [aria-current]{color:var(--red);text-decoration:underline;text-underline-offset:7px}
+.page-title{font-size:clamp(64px,10vw,150px);line-height:.94;margin:15px 0}
+.section-head .page-title{font-size:clamp(55px,8.3vw,125px);margin-bottom:0}
+.browse-all{margin-top:30px}
+.interlude{display:grid;grid-template-columns:1fr 1.15fr;min-height:430px;background:var(--green);color:var(--paper)}
+.interlude.reversed{grid-template-columns:1.15fr 1fr}
+.interlude.reversed figure{order:2}
+.interlude figure,.about-lead figure{position:relative;min-height:320px;overflow:hidden;background:#262b20}
+.interlude img,.about-lead img{width:100%;height:100%;position:absolute;object-fit:cover;object-position:center 33%}
+.interlude figcaption,.about-lead figcaption{position:absolute;bottom:12px;left:14px;background:var(--ink);color:var(--paper);padding:4px 8px;font-size:11px}
+.interlude>div{padding:clamp(29px,6.7vw,105px);align-self:center}
+.interlude .rule{color:var(--gold)}
+blockquote{font:italic 600 clamp(40px,5vw,77px)/1.02 var(--serif);letter-spacing:-.035em;margin:18px 0 22px;text-wrap:balance}
+.quote-source{font-size:13px;text-decoration:underline;text-underline-offset:4px;color:var(--gold)}
+.translated{display:block;margin-top:5px;font-size:11px}
+.about-lead{display:grid;grid-template-columns:1.2fr 1fr;border-bottom:1px solid var(--line)}
+.about-lead>div{align-self:center;padding:clamp(28px,6vw,94px)}
+.about-lead>div>p:last-child,.contact-layout>div>p:not(.eyebrow){max-width:370px;margin-top:23px;color:var(--muted)}
+.about-lead figure{min-height:560px}
+.about-lead img{object-position:center 27%}
+.contact-layout{display:grid;grid-template-columns:1.25fr 1fr;gap:8%;align-items:start;padding:clamp(28px,7vw,115px) 5%}
+.contact-layout details{max-width:470px;border-top:1px solid var(--line);padding:12px 0;margin-top:13px}
+.contact-layout summary{cursor:pointer;font-weight:700}
+.contact-layout details p{margin-top:8px;color:var(--muted)}
+.contact-story{display:inline-block;margin-top:13px}
+.contact-panel{padding:clamp(22px,4vw,55px);background:var(--soft);align-self:center}
+.contact-panel h2{font-size:clamp(36px,5vw,62px)}
+.contact-panel form label{display:block;margin:14px 0}
+.contact-panel input,.contact-panel textarea{display:block;width:100%;padding:9px;border:1px solid var(--line);background:var(--paper);font:inherit}
+.contact-panel [hidden]{display:none}
+@media(max-width:650px){.header{grid-template-columns:1fr auto;gap:3px 12px}.header nav{order:3;grid-column:1/-1;gap:0;justify-content:space-between;padding:4px 0 8px}.header nav a{font-size:11px}.interlude,.interlude.reversed,.about-lead,.contact-layout{grid-template-columns:1fr}.interlude.reversed figure{order:0}.interlude figure{min-height:285px}.about-lead figure{min-height:350px}.contact-layout{gap:24px}.page-title{font-size:clamp(56px,13vw,94px)}}
+.studio{display:block;width:100%;position:relative;filter:none}
+.studio .blank{width:100%;height:auto;display:block}
+.studio .artwork{position:absolute;top:var(--art-y);left:var(--art-x);width:var(--art-width);transform:translateX(-50%);pointer-events:none}
+.studio .artwork img{width:100%;height:auto}
+.studio .ink{opacity:.94;mix-blend-mode:normal}
+.studio .stitch{filter:drop-shadow(.45px .55px .3px #23090d9c)}
+.studio .stitch::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(120deg,#ffe6ca59 0 .5px,transparent .5px 1.5px);mask:url(assets/mark.webp) center/contain no-repeat}
+.product-art{display:block;aspect-ratio:349/437}
+.product-art .item-number{padding:2px 4px;background:#f6f0e5dd}
+.detail-art .studio{max-width:420px}
+.bag-art{aspect-ratio:349/437}
+@media(max-width:600px){.detail-art .studio{width:min(68%,230px)}}
