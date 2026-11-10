@@ -6,29 +6,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Nimba Admin</title>
   <meta name="robots" content="noindex,nofollow" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="assets/mark.webp" />
+  <link rel="stylesheet" href="fonts.css" />
   <link rel="stylesheet" href="admin.css?v=1" />
   <link rel="stylesheet" href="admin-mobile.css?v=1" />
   <link rel="stylesheet" href="admin-bulk.css?v=1" />
   <link rel="stylesheet" href="admin-bulk-edit.css?v=1" />
   <link rel="stylesheet" href="admin-v2.css?v=1" />
   <link rel="stylesheet" href="admin-sort.css?v=1" />
+  <link rel="stylesheet" href="admin-nimba.css" />
 </head>
 <body>
   <div class="admin-login-screen" id="admin-login-screen">
+    <aside class="admin-login-editorial">
+      <img class="admin-login-photo" src="assets/dmba.webp" alt="" />
+      <div class="admin-login-caption"><span>FIG. 01 / D’MBA</span><span>COASTAL GUINEA</span></div>
+    </aside>
     <form class="admin-login-card" id="admin-login-form">
-      <div class="admin-mark">NIMBA</div><p>ADMIN ACCESS</p>
+      <a class="nimba-admin-wordmark" href="index.html"><img src="assets/mark.webp" alt="" /> NIMBA<span>.</span></a>
+      <div class="admin-login-heading"><p class="admin-kicker">Staff access</p><h1>Admin sign-in</h1></div>
       <label>Username<input id="login-username" type="text" autocomplete="username" required /></label>
       <label>Password<input id="login-password" type="password" autocomplete="current-password" required /></label>
-      <button type="submit">ENTER</button><p class="admin-message" id="login-message"></p>
+      <button type="submit">Sign in</button><p class="admin-message" id="login-message" role="status"></p>
     </form>
   </div>
 
   <div class="admin-app" id="admin-app" hidden>
     <header class="admin-header">
-      <button class="admin-brand" id="admin-home-btn" type="button">NIMBA / ADMIN</button>
+      <button class="admin-brand" id="admin-home-btn" type="button"><span class="nimba-admin-wordmark"><img src="assets/mark.webp" alt="" /> NIMBA<span>.</span></span><span class="admin-header-label">Admin</span></button>
       <div class="admin-header-meta"><span id="admin-user-label">STAFF</span><button id="admin-logout-btn" type="button">LOG OUT</button></div>
     </header>
 

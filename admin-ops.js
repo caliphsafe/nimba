@@ -36,10 +36,6 @@
         <div class="ops-toolbar"><input id="ops-fulfillment-search" type="search" placeholder="Search order or customer"><select id="ops-fulfillment-filter"><option value="OPEN">Needs action</option><option value="ALL">All orders</option></select><button class="ops-button secondary" id="ops-fulfillment-refresh">Refresh</button></div>
         <div class="ops-grid" id="ops-fulfillment-metrics"></div><div class="ops-panel"><div class="ops-panel-head"><div><h2>Shipping Queue</h2><p>Orders that still need fulfillment.</p></div></div><div class="ops-list" id="ops-fulfillment-list"></div></div>
       `)}
-      ${view("uniform-editor","Merchandising","Uniform Editor",`
-        <div class="ops-note">Live garments appear in Uniform automatically. Use this editor to override their placement or choose OFF to hide them from Uniform without changing the public Shop category.</div>
-        <div class="ops-toolbar"><input id="ops-uniform-search" type="search" placeholder="Search products"><select id="ops-uniform-filter"><option value="ALL">All products</option><option value="HEADWEAR">Headwear</option><option value="TOPS">Tops</option><option value="BOTTOMS">Bottoms</option><option value="OFF">Not in Uniform</option></select><button class="ops-button secondary" id="ops-uniform-refresh">Refresh</button></div><div id="ops-uniform-list"></div>
-      `)}
       ${view("drops","Release Management","Drops",`
         <div class="ops-note">Organize products into named drops using Shopify product tags. This does not publish or unpublish products.</div>
         <div class="ops-panel"><div class="ops-panel-head"><div><h2>Assign Product to Drop</h2></div></div><div class="ops-form-grid"><label class="ops-field">Product<select id="ops-drop-product"></select></label><label class="ops-field">Drop Name<input id="ops-drop-name" placeholder="FALL 2026"></label><div class="ops-field ops-field-full"><button class="ops-button" id="ops-drop-assign">Assign to Drop</button></div></div><p class="admin-message" id="ops-drop-message"></p></div>
@@ -62,7 +58,7 @@
   function view(id,kicker,title,body){return `<section class="admin-view" id="view-${id}" data-view-panel="${id}"><div class="admin-page-head"><div><p class="admin-kicker">${kicker}</p><h1>${title}</h1></div></div>${body}</section>`}
 
   function rebuildNav(nav){
-    const wanted=[["dashboard","Dashboard"],["orders","Orders"],["fulfillment","Fulfillment"],["products","Products"],["bulk","Bulk Upload"],["shop-editor","Shop Editor"],["uniform-editor","Uniform Editor"],["inventory","Inventory"],["drops","Drops"],["customers","Customers"],["models","Models"],["discounts","Discounts"],["draft-orders","Draft Orders"],["returns","Returns"],["abandoned","Abandoned"],["analytics","Analytics"],["settings","Settings"]];
+    const wanted=[["dashboard","Dashboard"],["orders","Orders"],["fulfillment","Fulfillment"],["products","Products"],["bulk","Bulk Upload"],["shop-editor","Shop Editor"],["inventory","Inventory"],["drops","Drops"],["customers","Customers"],["models","Models"],["discounts","Discounts"],["draft-orders","Draft Orders"],["returns","Returns"],["abandoned","Abandoned"],["analytics","Analytics"],["settings","Settings"]];
     const existing={};
     nav.querySelectorAll("[data-view]").forEach(b=>existing[b.dataset.view]=b);
     nav.innerHTML="";
@@ -76,7 +72,6 @@
         if(typeof switchView==="function") switchView(b.dataset.view);
         else document.querySelectorAll(".admin-view").forEach(x=>x.classList.toggle("is-active",x.dataset.viewPanel===b.dataset.view));
         if(b.dataset.view==="fulfillment") loadOrders().then(renderFulfillment).catch(showOpsError);
-        if(b.dataset.view==="uniform-editor") loadMerch().then(renderUniform).catch(showOpsError);
         if(b.dataset.view==="drops") loadMerch().then(renderDrops).catch(showOpsError);
         if(b.dataset.view==="returns") loadOrders().then(renderReturns).catch(showOpsError);
         if(b.dataset.view==="analytics") loadAnalytics().catch(showOpsError);
@@ -90,9 +85,6 @@
     $("ops-fulfillment-search")?.addEventListener("input",renderFulfillment);
     $("ops-fulfillment-filter")?.addEventListener("change",renderFulfillment);
     $("ops-fulfillment-refresh")?.addEventListener("click",()=>loadOrders(true).then(renderFulfillment).catch(showOpsError));
-    $("ops-uniform-search")?.addEventListener("input",renderUniform);
-    $("ops-uniform-filter")?.addEventListener("change",renderUniform);
-    $("ops-uniform-refresh")?.addEventListener("click",()=>loadMerch(true).then(renderUniform).catch(showOpsError));
     $("ops-drop-refresh")?.addEventListener("click",()=>loadMerch(true).then(renderDrops).catch(showOpsError));
     $("ops-drop-assign")?.addEventListener("click",assignDrop);
     $("ops-returns-search")?.addEventListener("input",renderReturns);
@@ -115,17 +107,6 @@
     $("ops-fulfillment-list")?.querySelectorAll("[data-go-orders]").forEach(b=>b.onclick=()=>document.querySelector('.admin-sidebar [data-view="orders"]')?.click());
   }
   function metric(a,b){return `<article class="ops-metric"><span>${esc(a)}</span><strong>${esc(b)}</strong></article>`}
-
-  function explicitUniformTag(p){return (p.tags||[]).map(String).find(t=>/^NIMBA_UNIFORM:(HEADWEAR|TOPS|BOTTOMS|OFF)$/i.test(t))?.split(":")[1]?.toUpperCase()||""}
-  function suggested(p){const s=`${p.productType||""} ${p.title||""}`.toLowerCase();if(/headwear|hat|cap|beanie|snapback|trucker|bucket hat/.test(s))return"HEADWEAR";if(/pants|pant|shorts|short|jogger|bottom|trouser|denim|jean|cargo|chino/.test(s))return"BOTTOMS";if(/hoodie|sweatshirt|crewneck|t-shirt|t shirt|tee|shirt|top|sweater|longsleeve|long sleeve|jersey/.test(s))return"TOPS";return"OFF"}
-  function uniformTag(p){const explicit=explicitUniformTag(p);if(explicit)return explicit;return String(p.status||"").toUpperCase()==="ACTIVE"?suggested(p):"OFF"}
-  function renderUniform(){
-    const q=($("ops-uniform-search")?.value||"").toLowerCase(),f=$("ops-uniform-filter")?.value||"ALL";
-    const rows=STATE.merch.filter(p=>(!q||`${p.title} ${p.productType}`.toLowerCase().includes(q))&&(f==="ALL"||uniformTag(p)===f));
-    $("ops-uniform-list").innerHTML=rows.length?rows.map(p=>{const active=uniformTag(p),explicit=explicitUniformTag(p),auto=!explicit&&String(p.status||"").toUpperCase()==="ACTIVE";return `<article class="ops-product-card"><img src="${esc(p.featuredImage?.url||"")}" alt=""><div><h3>${esc(p.title)}</h3><p>${esc(p.productType||"Uncategorized")} · ${auto?`Auto: ${active}`:`Uniform: ${active}`}</p></div><div class="ops-segment">${["HEADWEAR","TOPS","BOTTOMS","OFF"].map(v=>`<button class="${active===v?"is-active":""}" data-uniform-product="${esc(p.id)}" data-uniform-value="${v}">${v}</button>`).join("")}</div></article>`}).join(""):`<div class="ops-empty">No products found.</div>`;
-    $("ops-uniform-list")?.querySelectorAll("[data-uniform-product]").forEach(b=>b.onclick=()=>setUniform(b.dataset.uniformProduct,b.dataset.uniformValue,b));
-  }
-  async function setUniform(productId,value,btn){btn.disabled=true;try{await apiJson("/api/admin-merchandising",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"uniform",productId,value})});await loadMerch(true);renderUniform()}catch(e){alert(e.message)}finally{btn.disabled=false}}
 
   function dropTags(p){return (p.tags||[]).filter(t=>String(t).toUpperCase().startsWith("NIMBA_DROP:")).map(t=>String(t).slice(8))}
   function renderDrops(){

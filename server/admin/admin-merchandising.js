@@ -1,9 +1,7 @@
 
 import { shopifyAdminGraphql, throwUserErrors } from "./_shopify-admin.js";
 
-const UNIFORM_PREFIX = "NIMBA_UNIFORM:";
 const DROP_PREFIX = "NIMBA_DROP:";
-const VALID_UNIFORM = ["HEADWEAR", "TOPS", "BOTTOMS", "OFF"];
 
 async function getProducts() {
   const data = await shopifyAdminGraphql(`
@@ -54,25 +52,12 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const { action, productId, value, dropName } = req.body || {};
+    const { action, productId, dropName } = req.body || {};
     if (!productId) return res.status(400).json({ error: "Product ID is required." });
 
     const products = await getProducts();
     const product = products.find(p => p.id === productId);
     if (!product) return res.status(404).json({ error: "Product not found." });
-
-    if (action === "uniform") {
-      const next = String(value || "").toUpperCase();
-      if (!VALID_UNIFORM.includes(next)) return res.status(400).json({ error: "Invalid Uniform category." });
-      const oldTags = (product.tags || []).filter(tag => String(tag).toUpperCase().startsWith(UNIFORM_PREFIX));
-      await tagsRemove(productId, oldTags);
-
-      // OFF is stored explicitly so an item that would normally be
-      // auto-included does not reappear on the Uniform page.
-      await tagsAdd(productId, [`${UNIFORM_PREFIX}${next}`]);
-
-      return res.status(200).json({ ok: true, value: next });
-    }
 
     if (action === "drop" || action === "drop-remove") {
       const clean = String(dropName || "").trim().replace(/\s+/g, " ").slice(0, 60);
