@@ -173,11 +173,32 @@ body :focus-visible { outline: 2px solid var(--admin-red); outline-offset: 3px; 
 @media (max-width: 900px) {
   .admin-app .admin-page-head h1 { font-size: clamp(25px, 5vw, 36px) !important; }
 }
-@media (max-width: 650px) {
-  .admin-login-screen { grid-template-columns: 1fr; align-content: start; }
-  .admin-login-editorial { min-height: 0; height: min(31dvh, 260px); padding: 0; }
-  .admin-login-photo { width: 100%; height: 100%; object-position: center 30%; }
-  .admin-login-caption { bottom: 12px; background: var(--admin-green); padding: 7px 9px; }
-  .admin-login-card { gap: 13px; }
-  .admin-login-heading { margin: 5px 0; }
+@media (max-width: 650px), (max-width: 1000px) and (max-height: 500px) {
+  .admin-login-screen {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    padding: max(22px, env(safe-area-inset-top))
+      max(20px, env(safe-area-inset-right))
+      max(22px, env(safe-area-inset-bottom))
+      max(20px, env(safe-area-inset-left));
+  }
+  .admin-login-editorial { display: none; }
+  .admin-login-card { width: min(100%, 390px); gap: 14px; padding-block: 0; }
+  .admin-login-heading { margin: 8px 0 3px; }
+  .admin-login-card input { font-size: 16px; }
+}
+
+@media (max-width: 900px) {
+  .admin-app .admin-sidebar { visibility: hidden; overscroll-behavior-y: contain; }
+  body.admin-mobile-menu-open .admin-app .admin-sidebar { visibility: visible; }
+  body:not(.admin-mobile-menu-open) .admin-mobile-nav-backdrop { visibility: hidden; }
+  .admin-app .admin-mobile-nav-toggle { width: 44px; height: 44px; }
+  .admin-app :is(input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea) {
+    font-size: 16px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-app .ops-form-grid { grid-template-columns: minmax(0, 1fr); }
 }
