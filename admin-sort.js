@@ -40,7 +40,7 @@
   }
   function loadScript(src) {
     if(document.querySelector(`script[src^="${src}"]`)) return;
-    const script=document.createElement("script"); script.src=`${src}?v=8`; script.defer=true; document.head.appendChild(script);
+    const script=document.createElement("script"); script.src=`${src}?v=8`; script.async=false; document.head.appendChild(script);
   }
   function bootAddons(){
     loadScript("admin-bulk-edit-stability.js");
@@ -50,8 +50,6 @@
     loadScript("admin-inventory-bulk.js");
     loadStyle("admin-shop-editor.css");
     loadScript("admin-shop-editor.js");
-    loadStyle("admin-models.css");
-    loadScript("admin-models.js");
     loadStyle("admin-ops.css");
     loadScript("admin-ops.js");
   }

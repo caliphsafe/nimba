@@ -22,6 +22,7 @@ const categories = [
   ['polos', /polo/],
   ['layers', /hoodie|hooded|crewneck|sweatshirt|pullover/],
   ['tees', /t[ -]?shirt|\btee\b/],
+  ['bottoms', /pants?|shorts?|jeans?|joggers?|trousers?/],
   ['accessories', /cap|hat|tote|accessor/]
 ];
 const localCatalog = new Map(products.map(product => [product.id, product]));

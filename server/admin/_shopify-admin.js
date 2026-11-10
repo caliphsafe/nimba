@@ -88,3 +88,16 @@ export async function publishToHeadless(productId, publicationId) {
   `, {id: productId, input: [{publicationId}]});
   throwUserErrors(result.publishablePublish?.userErrors);
 }
+
+export function nimbaCollectionHandle() {
+  return (process.env.SHOPIFY_COLLECTION_HANDLE || "nimba").trim().toLowerCase();
+}
+
+export async function findNimbaCollection() {
+  const data = await shopifyAdminGraphql(`
+    query FindNimbaCollection($handle: String!) {
+      collectionByIdentifier(identifier: {handle: $handle}) { id }
+    }
+  `, {handle:nimbaCollectionHandle()});
+  return data.collectionByIdentifier;
+}

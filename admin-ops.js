@@ -1,6 +1,6 @@
 
 (() => {
-  const STATE={orders:[],merch:[],dashboard:null};
+  const STATE={orders:[],dashboard:null};
   const $=id=>document.getElementById(id);
   const esc=(v="")=>String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
   const cash=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(Number(n||0));
@@ -36,11 +36,6 @@
         <div class="ops-toolbar"><input id="ops-fulfillment-search" type="search" placeholder="Search order or customer"><select id="ops-fulfillment-filter"><option value="OPEN">Needs action</option><option value="ALL">All orders</option></select><button class="ops-button secondary" id="ops-fulfillment-refresh">Refresh</button></div>
         <div class="ops-grid" id="ops-fulfillment-metrics"></div><div class="ops-panel"><div class="ops-panel-head"><div><h2>Shipping Queue</h2><p>Orders that still need fulfillment.</p></div></div><div class="ops-list" id="ops-fulfillment-list"></div></div>
       `)}
-      ${view("drops","Release Management","Drops",`
-        <div class="ops-note">Organize products into named drops using Shopify product tags. This does not publish or unpublish products.</div>
-        <div class="ops-panel"><div class="ops-panel-head"><div><h2>Assign Product to Drop</h2></div></div><div class="ops-form-grid"><label class="ops-field">Product<select id="ops-drop-product"></select></label><label class="ops-field">Drop Name<input id="ops-drop-name" placeholder="FALL 2026"></label><div class="ops-field ops-field-full"><button class="ops-button" id="ops-drop-assign">Assign to Drop</button></div></div><p class="admin-message" id="ops-drop-message"></p></div>
-        <div class="ops-panel"><div class="ops-panel-head"><div><h2>Current Drops</h2></div><button class="ops-button secondary" id="ops-drop-refresh">Refresh</button></div><div id="ops-drop-groups"></div></div>
-      `)}
       ${view("returns","Post Purchase","Returns",`
         <div class="ops-note">Review refunded and partially-refunded orders. This screen does not issue refunds or restock inventory.</div>
         <div class="ops-toolbar"><input id="ops-returns-search" type="search" placeholder="Search order or customer"><select id="ops-returns-filter"><option value="ALL">Refunded + partial</option><option value="REFUNDED">Refunded</option><option value="PARTIALLY_REFUNDED">Partially refunded</option></select><button class="ops-button secondary" id="ops-returns-refresh">Refresh</button></div><div class="ops-list" id="ops-returns-list"></div>
@@ -58,7 +53,7 @@
   function view(id,kicker,title,body){return `<section class="admin-view" id="view-${id}" data-view-panel="${id}"><div class="admin-page-head"><div><p class="admin-kicker">${kicker}</p><h1>${title}</h1></div></div>${body}</section>`}
 
   function rebuildNav(nav){
-    const wanted=[["dashboard","Dashboard"],["orders","Orders"],["fulfillment","Fulfillment"],["products","Products"],["bulk","Bulk Upload"],["shop-editor","Shop Editor"],["inventory","Inventory"],["drops","Drops"],["customers","Customers"],["models","Models"],["discounts","Discounts"],["draft-orders","Draft Orders"],["returns","Returns"],["abandoned","Abandoned"],["analytics","Analytics"],["settings","Settings"]];
+    const wanted=[["dashboard","Dashboard"],["orders","Orders"],["fulfillment","Fulfillment"],["products","Products"],["editor","Add Product"],["bulk","Bulk Upload"],["shop-editor","Shop Editor"],["inventory","Inventory"],["customers","Customers"],["discounts","Discounts"],["draft-orders","Draft Orders"],["returns","Returns"],["abandoned","Abandoned"],["analytics","Analytics"],["settings","Settings"]];
     const existing={};
     nav.querySelectorAll("[data-view]").forEach(b=>existing[b.dataset.view]=b);
     nav.innerHTML="";
@@ -72,11 +67,9 @@
         if(typeof switchView==="function") switchView(b.dataset.view);
         else document.querySelectorAll(".admin-view").forEach(x=>x.classList.toggle("is-active",x.dataset.viewPanel===b.dataset.view));
         if(b.dataset.view==="fulfillment") loadOrders().then(renderFulfillment).catch(showOpsError);
-        if(b.dataset.view==="drops") loadMerch().then(renderDrops).catch(showOpsError);
         if(b.dataset.view==="returns") loadOrders().then(renderReturns).catch(showOpsError);
         if(b.dataset.view==="analytics") loadAnalytics().catch(showOpsError);
         if(b.dataset.view==="shop-editor" && typeof window.loadShopEditor==="function") window.loadShopEditor();
-        if(b.dataset.view==="models" && typeof window.loadModelsAdmin==="function") window.loadModelsAdmin();
       };
     });
   }
@@ -85,8 +78,6 @@
     $("ops-fulfillment-search")?.addEventListener("input",renderFulfillment);
     $("ops-fulfillment-filter")?.addEventListener("change",renderFulfillment);
     $("ops-fulfillment-refresh")?.addEventListener("click",()=>loadOrders(true).then(renderFulfillment).catch(showOpsError));
-    $("ops-drop-refresh")?.addEventListener("click",()=>loadMerch(true).then(renderDrops).catch(showOpsError));
-    $("ops-drop-assign")?.addEventListener("click",assignDrop);
     $("ops-returns-search")?.addEventListener("input",renderReturns);
     $("ops-returns-filter")?.addEventListener("change",renderReturns);
     $("ops-returns-refresh")?.addEventListener("click",()=>loadOrders(true).then(renderReturns).catch(showOpsError));
@@ -96,7 +87,6 @@
   }
 
   async function loadOrders(force=false){if(STATE.orders.length&&!force)return STATE.orders;const d=await apiJson("/api/admin-orders");STATE.orders=d.orders||[];return STATE.orders}
-  async function loadMerch(force=false){if(STATE.merch.length&&!force)return STATE.merch;const d=await apiJson("/api/admin-merchandising");STATE.merch=d.products||[];return STATE.merch}
 
   function renderFulfillment(){
     const q=($("ops-fulfillment-search")?.value||"").toLowerCase(), f=$("ops-fulfillment-filter")?.value||"OPEN";
@@ -107,17 +97,6 @@
     $("ops-fulfillment-list")?.querySelectorAll("[data-go-orders]").forEach(b=>b.onclick=()=>document.querySelector('.admin-sidebar [data-view="orders"]')?.click());
   }
   function metric(a,b){return `<article class="ops-metric"><span>${esc(a)}</span><strong>${esc(b)}</strong></article>`}
-
-  function dropTags(p){return (p.tags||[]).filter(t=>String(t).toUpperCase().startsWith("NIMBA_DROP:")).map(t=>String(t).slice(8))}
-  function renderDrops(){
-    if($("ops-drop-product")) $("ops-drop-product").innerHTML=STATE.merch.map(p=>`<option value="${esc(p.id)}">${esc(p.title)}</option>`).join("");
-    const groups=Object.create(null);STATE.merch.forEach(p=>dropTags(p).forEach(d=>(groups[d]??=[]).push(p)));
-    const names=Object.keys(groups).sort();
-    $("ops-drop-groups").innerHTML=names.length?names.map(n=>`<div class="ops-drop-group"><h3>${esc(n)}</h3><div class="ops-drop-products">${groups[n].map(p=>`<span>${esc(p.title)} <button class="ops-chip" data-clear-drop="${esc(n)}" data-drop-product="${esc(p.id)}">×</button></span>`).join("")}</div></div>`).join(""):`<div class="ops-empty">No drops assigned yet.</div>`;
-    $("ops-drop-groups")?.querySelectorAll("[data-clear-drop]").forEach(b=>b.onclick=()=>clearDrop(b.dataset.dropProduct,b.dataset.clearDrop));
-  }
-  async function assignDrop(){const productId=$("ops-drop-product")?.value,dropName=($("ops-drop-name")?.value||"").trim();if(!productId||!dropName)return msg("ops-drop-message","Choose a product and enter a drop name.");try{await apiJson("/api/admin-merchandising",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"drop",productId,dropName})});$("ops-drop-name").value="";msg("ops-drop-message","Product assigned.");await loadMerch(true);renderDrops()}catch(e){msg("ops-drop-message",e.message)}}
-  async function clearDrop(productId,dropName){try{await apiJson("/api/admin-merchandising",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"drop-remove",productId,dropName})});await loadMerch(true);renderDrops()}catch(e){alert(e.message)}}
 
   function renderReturns(){
     const q=($("ops-returns-search")?.value||"").toLowerCase(),f=$("ops-returns-filter")?.value||"ALL";

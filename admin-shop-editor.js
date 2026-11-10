@@ -22,7 +22,8 @@
     if (CATEGORIES.includes(direct)) return direct;
 
     const clue = `${name} ${type}`.toLowerCase();
-    if (/(hoodie|hooded|sweatshirt|pullover)/.test(clue)) return "Hoodies";
+    if (/\bpolo\b/.test(clue)) return "Polos";
+    if (/(hoodie|hooded|crewneck|sweatshirt|pullover)/.test(clue)) return "Hoodies";
     if (/(t[\s-]?shirt|tee\b|shirt\b|long[\s-]?sleeve|jersey)/.test(clue)) return "T-Shirts";
     if (/(sweatpant|jogger|trouser|jean|pants?\b)/.test(clue)) return "Pants";
     if (/(shorts?\b)/.test(clue)) return "Shorts";
@@ -53,23 +54,6 @@
 
   function installNavAndView() {
     if (document.getElementById("view-shop-editor")) return;
-
-    const nav = document.querySelector(".admin-sidebar nav");
-    const productsButton = nav?.querySelector('[data-view="products"]');
-    if (nav) {
-      const button = document.createElement("button");
-      button.className = "admin-nav-link";
-      button.type = "button";
-      button.dataset.view = "shop-editor";
-      button.textContent = "Shop Editor";
-      if (productsButton?.nextSibling) nav.insertBefore(button, productsButton.nextSibling);
-      else nav.appendChild(button);
-
-      button.addEventListener("click", () => {
-        if (typeof switchView === "function") switchView("shop-editor");
-        loadShopEditor();
-      });
-    }
 
     const main = document.querySelector(".admin-main");
     if (!main) return;

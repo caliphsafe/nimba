@@ -1,5 +1,6 @@
 import {
   getPrimaryLocation,
+  findNimbaCollection,
   getHeadlessPublication,
   publishToHeadless,
   shopifyAdminGraphql,
@@ -76,6 +77,7 @@ export default async function handler(req, res) {
   try {
     const {
       productId,
+      bulkUpload = false,
       title,
       descriptionHtml = "",
       productType = "Product",
@@ -128,13 +130,20 @@ export default async function handler(req, res) {
       }],
     }));
 
+    const collections = new Set(Array.isArray(collectionIds) ? collectionIds.filter(Boolean) : []);
+    if (bulkUpload && !productId) {
+      const nimba = await findNimbaCollection();
+      if (!nimba) return res.status(409).json({error:"Create the Nimba collection in Shopify before uploading products."});
+      collections.add(nimba.id);
+    }
+
     const productSetInput = {
       title: title.trim(),
       descriptionHtml,
       productType,
       vendor,
       status: normalizedStatus,
-      collections: Array.isArray(collectionIds) ? collectionIds.filter(Boolean) : [],
+      collections: [...collections],
       productOptions,
       variants,
     };

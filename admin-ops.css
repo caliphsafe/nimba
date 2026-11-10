@@ -20,7 +20,6 @@
 .ops-product-card:first-child{border-top:0}.ops-product-card img{width:52px;height:62px;object-fit:contain;background:#eee}
 .ops-product-card h3{margin:0 0 4px;font-size:11px;font-weight:500}.ops-product-card p{margin:0;font-size:8px;opacity:.5}
 .ops-segment{display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap}.ops-segment button{min-height:30px;padding:0 7px;border:1px solid rgba(0,0,0,.14);background:transparent;font-size:7px;letter-spacing:.04em}.ops-segment button.is-active{background:#111;color:#fff}
-.ops-drop-group{border-top:1px solid rgba(0,0,0,.09);padding:11px 0}.ops-drop-group:first-child{border-top:0}.ops-drop-group h3{font-size:12px;margin:0 0 7px}.ops-drop-products{display:flex;gap:6px;flex-wrap:wrap}.ops-drop-products span{border:1px solid rgba(0,0,0,.12);padding:6px 8px;font-size:8px}
 .ops-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ops-field{display:grid;gap:5px;font-size:8px;letter-spacing:.06em;text-transform:uppercase}.ops-field-full{grid-column:1/-1}
 .ops-note{border-left:2px solid #111;padding:8px 10px;font-size:9px;line-height:1.45;background:rgba(0,0,0,.025)}
 .ops-bars{display:grid;gap:8px}.ops-bar{display:grid;grid-template-columns:minmax(120px,1fr) 2fr 70px;gap:8px;align-items:center}.ops-bar span{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ops-bar-track{height:7px;background:rgba(0,0,0,.08)}.ops-bar-fill{height:100%;background:#111}.ops-bar strong{text-align:right;font-size:9px}

@@ -8,8 +8,6 @@ import inventoryUpdateHandler from "../server/admin/admin-inventory-update.js";
 import locationsHandler from "../server/admin/admin-locations.js";
 import loginHandler from "../server/admin/admin-login.js";
 import logoutHandler from "../server/admin/admin-logout.js";
-import merchandisingHandler from "../server/admin/admin-merchandising.js";
-import modelsHandler from "../server/admin/admin-models.js";
 import ordersHandler from "../server/admin/admin-orders.js";
 import productDeleteHandler from "../server/admin/admin-product-delete.js";
 import productSaveHandler from "../server/admin/admin-product-save.js";
@@ -32,8 +30,6 @@ const actions = Object.freeze({
   "locations": locationsHandler,
   "login": loginHandler,
   "logout": logoutHandler,
-  "merchandising": merchandisingHandler,
-  "models": modelsHandler,
   "orders": ordersHandler,
   "product-delete": productDeleteHandler,
   "product-save": productSaveHandler,

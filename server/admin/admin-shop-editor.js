@@ -1,4 +1,4 @@
-import { shopifyAdminGraphql, throwUserErrors } from "./_shopify-admin.js";
+import { shopifyAdminGraphql, throwUserErrors, nimbaCollectionHandle } from "./_shopify-admin.js";
 
 const FEATURE_PREFIX = "NIMBA_FEATURED:";
 const CATEGORIES = ["T-Shirts", "Hoodies", "Polos", "Pants", "Shorts", "Headwear", "Accessories"];
@@ -34,7 +34,8 @@ function inferCategory(title = "", currentType = "") {
   if (directMap[direct]) return directMap[direct];
 
   const clue = `${title} ${currentType}`.toLowerCase();
-  if (/(hoodie|hooded|sweatshirt|pullover)/.test(clue)) return "Hoodies";
+  if (/\bpolo\b/.test(clue)) return "Polos";
+  if (/(hoodie|hooded|crewneck|sweatshirt|pullover)/.test(clue)) return "Hoodies";
   if (/(t[\s-]?shirt|tee\b|shirt\b|long[\s-]?sleeve|jersey)/.test(clue)) return "T-Shirts";
   if (/(sweatpant|jogger|trouser|jean|pants?\b)/.test(clue)) return "Pants";
   if (/(shorts?\b)/.test(clue)) return "Shorts";
@@ -43,24 +44,27 @@ function inferCategory(title = "", currentType = "") {
 }
 
 async function getProducts() {
-  const data = await shopifyAdminGraphql(`
-    query ShopEditorProducts {
-      products(first: 100, sortKey: CREATED_AT, reverse: true) {
-        nodes {
-          id
-          handle
-          title
-          productType
-          status
-          tags
-          createdAt
-          featuredImage { url altText }
+  const products = [];
+  let cursor = null;
+  for (;;) {
+    const data = await shopifyAdminGraphql(`
+      query ShopEditorProducts($handle: String!, $cursor: String) {
+        collectionByIdentifier(identifier: {handle: $handle}) {
+          products(first: 100, after: $cursor) {
+            pageInfo { hasNextPage endCursor }
+            nodes { id handle title productType status tags createdAt featuredImage { url altText } }
+          }
         }
       }
-    }
-  `);
+    `, {handle:nimbaCollectionHandle(),cursor});
+    const page = data.collectionByIdentifier?.products;
+    if (!page) return [];
+    products.push(...page.nodes);
+    if (!page.pageInfo.hasNextPage) break;
+    cursor = page.pageInfo.endCursor;
+  }
 
-  return (data.products?.nodes || []).map(product => ({
+  return products.map(product => ({
     ...product,
     featuredSlot: featureSlot(product.tags),
     category: CATEGORIES.includes(product.productType)
@@ -151,12 +155,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Product ID is required." });
     }
 
-    if (action === "category") {
-      const product = await updateCategory(productId, category);
-      return res.status(200).json({ ok: true, product });
-    }
-
-    if (action !== "feature") {
+    if (!["category","feature"].includes(action)) {
       return res.status(400).json({ error: "Unknown Shop Editor action." });
     }
 
@@ -165,6 +164,11 @@ export default async function handler(req, res) {
 
     if (!target) {
       return res.status(404).json({ error: "Product not found." });
+    }
+
+    if (action === "category") {
+      const product = await updateCategory(productId, category);
+      return res.status(200).json({ ok: true, product });
     }
 
     const targetFeatureTags = (target.tags || []).filter(tag => String(tag).toUpperCase().startsWith(FEATURE_PREFIX));

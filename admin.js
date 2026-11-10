@@ -1,5 +1,6 @@
 let ADMIN_PRODUCTS = [];
 let ADMIN_COLLECTIONS = [];
+let NIMBA_COLLECTION_HANDLE = "nimba";
 let ADMIN_LOCATIONS = [];
 let EDITING_PRODUCT = null;
 let PENDING_IMAGES = [];
@@ -112,7 +113,7 @@ function showLogin() {
   document.getElementById("admin-app").hidden = true;
 }
 
-function showApp(username = "CODY") {
+function showApp(username = "nimba") {
   document.getElementById("admin-login-screen").hidden = true;
   document.getElementById("admin-app").hidden = false;
   document.getElementById("admin-user-label").textContent = String(username).toUpperCase();
@@ -204,10 +205,12 @@ async function loadAdminData() {
 
   ADMIN_PRODUCTS = productsData.products || [];
   ADMIN_COLLECTIONS = collectionsData.collections || [];
+  NIMBA_COLLECTION_HANDLE = collectionsData.nimbaHandle || "nimba";
   ADMIN_LOCATIONS = locationsData.locations || [];
 
   renderProductList();
   renderCollections();
+  if (typeof renderBulkGlobalCollections === "function") renderBulkGlobalCollections();
   renderArchive();
   renderInventory();
 }
@@ -416,7 +419,7 @@ function renderCollections(selectedIds = null) {
 
   const selected = new Set(
     selectedIds ||
-      ADMIN_COLLECTIONS.filter((collection) => collection.handle === "shop-all").map((collection) => collection.id)
+      ADMIN_COLLECTIONS.filter((collection) => collection.handle === NIMBA_COLLECTION_HANDLE).map((collection) => collection.id)
   );
 
   wrap.innerHTML = ADMIN_COLLECTIONS.map((collection) => `

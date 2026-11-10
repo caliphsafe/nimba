@@ -15,7 +15,7 @@ let catalog = [];
 let live = false;
 let lookup = new Map();
 const staticCopy = [...document.querySelectorAll('[data-i]')].map(node => [node,node.textContent]);
-const categories = ['all','tees','layers','polos','accessories'];
+const categories = ['all','tees','layers','polos','bottoms','accessories'];
 
 function getSaved(key, fallback) {
   try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
@@ -46,7 +46,7 @@ const money = (amount, currency = 'USD') => amount == null ? '—' : new Intl.Nu
 
 function renderFilters() {
   if (!filters) return;
-  filters.innerHTML = categories.map(key =>
+  filters.innerHTML = categories.filter(key => key !== 'bottoms' || catalog.some(product => product.category === key)).map(key =>
     `<button type="button" data-filter="${key}" aria-pressed="${key===category}">${t(key)}</button>`).join('');
 }
 function renderProducts() {
@@ -54,7 +54,7 @@ function renderProducts() {
   const featured = cards.hasAttribute('data-featured');
   const bySlot = catalog.filter(product => product.featuredSlot).sort((a,b) => a.featuredSlot-b.featuredSlot);
   const favorites = [0,3,6,8].map(index => lookup.get(products[index].id)).filter(Boolean);
-  const display = featured ? [...new Set([...bySlot,...favorites,...catalog])].slice(0,4) :
+  const display = featured ? (bySlot.length ? bySlot : [...new Set([...favorites,...catalog])]).slice(0,4) :
     catalog.filter(product => category === 'all' || category === product.category);
   cards.innerHTML = display.map(product => {
     const name = escapeHtml(localized(product.name));

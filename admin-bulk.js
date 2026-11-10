@@ -44,7 +44,8 @@ function initBulkUpload() {
 function inferBulkCategory(garmentClue = "") {
   const clue = String(garmentClue || "").toLowerCase().replace(/[_-]+/g, " ");
 
-  if (/(hoodie|hooded|sweatshirt|pullover)/.test(clue)) return "Hoodies";
+  if (/\bpolo\b/.test(clue)) return "Polos";
+  if (/(hoodie|hooded|crewneck|sweatshirt|pullover)/.test(clue)) return "Hoodies";
   if (/(t[\s-]?shirt|tee\b|shirt\b|long[\s-]?sleeve|jersey)/.test(clue)) return "T-Shirts";
   if (/(shorts?\b)/.test(clue)) return "Shorts";
   if (/(sweatpant|jogger|trouser|jean|denim|chino|cargo|pants?\b)/.test(clue)) return "Pants";
@@ -98,7 +99,7 @@ function cleanBulkFilename(filename = "") {
     const price = formatMatch[4].trim();
 
     return {
-      productName: `${namePart}_${garmentClue}`,
+      productName: `${namePart} ${garmentClue}`,
       garmentClue,
       category: inferBulkCategory(garmentClue),
       color,
@@ -128,7 +129,7 @@ function makeBulkId(prefix = "bulk") {
 
 function getDefaultBulkCollections() {
   const allItems = (typeof ADMIN_COLLECTIONS !== "undefined" ? ADMIN_COLLECTIONS : [])
-    .filter((collection) => collection.handle === "shop-all")
+    .filter((collection) => collection.handle === NIMBA_COLLECTION_HANDLE)
     .map((collection) => collection.id);
 
   return allItems;
@@ -161,7 +162,7 @@ function ingestBulkFiles(files) {
         vendor: "Nimba",
         description: "",
         collectionIds: getDefaultBulkCollections(),
-        sizes: makeDefaultSizes(),
+        sizes: makeDefaultSizes(/^(Headwear|Accessories)$/.test(parsed.category) ? ["One Size"] : ["S", "M", "L", "XL", "XXL"]),
         images: [],
         state: "editing",
         error: "",
@@ -237,7 +238,7 @@ function renderBulkGlobalCollections() {
 
   wrap.innerHTML = collections.map((collection) => `
     <label class="bulk-collection-chip">
-      <input type="checkbox" value="${escapeHtml(collection.id)}" ${collection.handle === "shop-all" ? "checked" : ""} />
+      <input type="checkbox" value="${escapeHtml(collection.id)}" ${collection.handle === NIMBA_COLLECTION_HANDLE ? "checked" : ""} />
       <span>${escapeHtml(collection.title)}</span>
     </label>
   `).join("");
@@ -510,7 +511,7 @@ function validateBulkProduct(product) {
   const issues = [];
 
   if (!String(product.name || "").trim()) issues.push("Name required");
-  if (product.price === "" || Number(product.price) < 0) issues.push("Price required");
+  if (String(product.price).trim() === "" || !Number.isFinite(Number(product.price)) || Number(product.price) < 0) issues.push("Price required");
   if (!product.images.length) issues.push("Image required");
   if (!product.sizes.length || product.sizes.some((size) => !String(size.name || "").trim())) issues.push("Check sizes");
 
@@ -652,6 +653,7 @@ async function publishBulkProducts() {
         method: "POST",
         body: JSON.stringify({
           productId: null,
+          bulkUpload: true,
           title: String(product.name).trim(),
           descriptionHtml: textToHtml(product.description || ""),
           productType: product.type || "Product",
