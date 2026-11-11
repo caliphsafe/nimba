@@ -73,3 +73,15 @@
 @media(max-width:900px){.hero-selection{grid-template-columns:1fr 1.5fr;gap:15px}.selection-controls{grid-column:2}.selection-emblem{grid-row:1/3}.heritage-timeline{gap:35px;padding:55px 5%}.timeline-list li{gap:15px}}
 @media(max-width:650px){.header nav a{gap:6px}.nav-glyph{width:23px;height:23px}.hero-selection{padding:15px 5%;grid-template-columns:1fr auto;gap:7px 15px}.selection-emblem{grid-row:auto;grid-column:1/-1;font-size:10px;gap:8px}.selection-emblem>img{width:28px;height:28px}.selection-link{gap:10px}.selection-link strong{font-size:17px}.selection-controls{grid-column:2;grid-row:2;flex-direction:column;gap:0}.selection-arrow{display:none}#selection-image{width:60px;height:75px}.heritage-timeline,.heritage-reflection{grid-template-columns:1fr;padding:44px 5%;gap:32px}.timeline-intro{position:static}.timeline-intro h2{max-width:18ch}.section-seal{width:56px;height:56px;margin-bottom:16px}.timeline-list li{gap:16px}.timeline-list h3{font-size:23px}.heritage-reflection>img{max-width:280px;justify-self:center}.belt-glyph{width:24px;height:24px}.belt{min-height:54px}.figure-number .carved-icon{width:25px;height:25px}.featured-label{top:10px;left:10px}.item-number{width:30px;height:30px}.item-number .carved-icon{width:23px;height:23px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal-on-scroll{opacity:1;transform:none}}
+
+/* Carved correspondence controls use SVG artwork rather than native glyphs. */
+.contact-layout summary{display:flex;align-items:center;gap:15px;list-style:none;min-height:48px}
+.contact-layout summary::-webkit-details-marker{display:none}
+.contact-layout summary::marker{content:''}
+.contact-layout summary::after{content:'';display:block;width:29px;height:29px;flex:none;margin-left:auto;background:url('assets/icons/arrow.svg') center/contain no-repeat;transform:rotate(90deg);transition:transform .2s ease}
+.contact-layout details[open]>summary::after{transform:rotate(-90deg)}
+.header .nav-glyph{width:32px;height:32px}
+.eyebrow.rule .carved-icon{width:36px;height:36px}
+.timeline-list li>img{padding:4px}
+@media(max-width:650px){.header .nav-glyph{width:27px;height:27px}.header nav a{gap:4px}.header nav a span{letter-spacing:.04em}}
+@media(prefers-reduced-motion:reduce){.contact-layout summary::after{transition:none}}

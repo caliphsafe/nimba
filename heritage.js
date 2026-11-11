@@ -1,6 +1,6 @@
 // Original Nimba brand illustrations. These are not historical Baga symbols.
 export function carvedIcon(name = 'story', className = '') {
-  return `<img class="carved-icon ${className}" src="assets/icons/${name}.svg" alt="" aria-hidden="true">`;
+  return `<img class="carved-icon ${className}" src="assets/icons/${name}.svg?v=2" alt="" aria-hidden="true">`;
 }
 
 export function initHeritage({getProducts, getLanguage, money, translate}) {

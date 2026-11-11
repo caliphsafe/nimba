@@ -63,7 +63,7 @@
     const existing={};
     nav.querySelectorAll("[data-view]").forEach(b=>existing[b.dataset.view]=b);
     nav.innerHTML="";
-    wanted.forEach(([v,l])=>{const b=existing[v]||document.createElement("button");b.type="button";b.className="admin-nav-link"+(v==="dashboard"?" is-active":"");b.dataset.view=v;b.textContent=l;const icon=document.createElement("img");icon.src="assets/icons/"+({dashboard:"home",products:"shop",editor:"shop",bulk:"harvest","shop-editor":"shop",inventory:"harvest",customers:"contact",settings:"connection"}[v]||"connection")+".svg";icon.alt="";icon.className="admin-carved-icon";icon.setAttribute("aria-hidden","true");b.prepend(icon);nav.appendChild(b)});
+    wanted.forEach(([v,l])=>{const b=existing[v]||document.createElement("button");b.type="button";b.className="admin-nav-link"+(v==="dashboard"?" is-active":"");b.dataset.view=v;b.textContent=l;const icon=document.createElement("img");icon.src="assets/icons/"+({dashboard:"home",products:"shop",editor:"shop",bulk:"harvest","shop-editor":"shop",inventory:"harvest",customers:"contact",settings:"connection"}[v]||"connection")+".svg?v=2";icon.alt="";icon.className="admin-carved-icon";icon.setAttribute("aria-hidden","true");b.prepend(icon);nav.appendChild(b)});
   }
 
   function bindNav(nav){
